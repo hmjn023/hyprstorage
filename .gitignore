@@ -1,0 +1,91 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Gradle cache
+.gradle-cache/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
+
+# Minecraft run directories
+run/
+logs/
+crash-reports/
+
+# Rust
+src/main/rust/target/
+src/main/rust/Cargo.lock
+*.rs.bk
+
+# Wasm build artifacts (auto-generated)
+# Keep the .wasm files in build/resources/main/wasm/ as they are generated
+# but ignore them in src/main/resources/wasm/ if accidentally copied
+src/main/resources/wasm/*.wasm
+
+# Generated resources
+src/generated/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Keep gradle wrapper jar
+!gradle/wrapper/*.jar
+
+# Keep jarJar dependencies if needed
+!**/libs/*.jar
