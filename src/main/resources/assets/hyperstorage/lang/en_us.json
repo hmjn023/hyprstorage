@@ -1,5 +1,7 @@
 {
-  "itemGroup.hyperstorage": "Example Mod Tab",
+  "itemGroup.hyperstorage": "Hyper Storage",
   "block.hyperstorage.example_block": "Example Block",
-  "item.hyperstorage.example_item": "Example Item"
+  "block.hyperstorage.hyper_storage_block": "Hyper Storage Block",
+  "item.hyperstorage.example_item": "Example Item",
+  "container.hyperstorage.hyper_storage": "Hyper Storage"
 }

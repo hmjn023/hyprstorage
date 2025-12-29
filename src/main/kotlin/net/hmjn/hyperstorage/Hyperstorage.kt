@@ -32,30 +32,35 @@ object Hyperstorage {
 
         // Register the KDeferredRegister to the mod-specific event bus
         ModBlocks.REGISTRY.register(MOD_BUS)
+        net.hmjn.hyperstorage.blockentity.ModBlockEntities.REGISTRY.register(MOD_BUS)
+        net.hmjn.hyperstorage.item.ModItems.REGISTRY.register(MOD_BUS)
+        net.hmjn.hyperstorage.creativetab.ModCreativeTabs.REGISTRY.register(MOD_BUS)
+        net.hmjn.hyperstorage.menu.ModMenuTypes.REGISTRY.register(MOD_BUS)
 
-        val obj = runForDist(clientTarget = {
-            MOD_BUS.addListener(::onClientSetup)
-            Minecraft.getInstance()
-        }, serverTarget = {
-            MOD_BUS.addListener(::onServerSetup)
-            "test"
-        })
+        val obj =
+                runForDist(
+                        clientTarget = {
+                            MOD_BUS.addListener(::onClientSetup)
+                            Minecraft.getInstance()
+                        },
+                        serverTarget = {
+                            MOD_BUS.addListener(::onServerSetup)
+                            "test"
+                        }
+                )
 
         println(obj)
     }
 
     /**
-     * This is used for initializing client specific
-     * things such as renderers and keymaps
-     * Fired on the mod specific event bus.
+     * This is used for initializing client specific things such as renderers and keymaps Fired on
+     * the mod specific event bus.
      */
     private fun onClientSetup(event: FMLClientSetupEvent) {
         LOGGER.log(Level.INFO, "Initializing client...")
     }
 
-    /**
-     * Fired on the global Forge bus.
-     */
+    /** Fired on the global Forge bus. */
     private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
         LOGGER.log(Level.INFO, "Server starting...")
     }
@@ -76,6 +81,16 @@ object Hyperstorage {
             }
         } catch (e: Exception) {
             LOGGER.error("Error testing Wasm", e)
+        }
+    }
+
+    @SubscribeEvent
+    fun registerCapabilities(event: net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent) {
+        event.registerBlockEntity(
+                net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
+                net.hmjn.hyperstorage.blockentity.ModBlockEntities.HYPER_STORAGE_BLOCK_ENTITY.get()
+        ) { blockEntity: net.hmjn.hyperstorage.blockentity.HyperStorageBlockEntity, _ ->
+            blockEntity.inventory
         }
     }
 }
