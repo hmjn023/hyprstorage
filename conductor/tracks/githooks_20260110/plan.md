@@ -14,7 +14,7 @@
 - [x] Task: Conductor - User Manual Verification 'Script Definition' (Protocol in workflow.md)
 
 ## Phase 3: Hook Implementation
-- [ ] Task: Create `.husky/pre-commit` hook to run `format:all` and `lint:all`.
+- [~] Task: Create `.husky/pre-commit` hook to run `format:all` and `lint:all`.
     - *Note:* Implement logic to re-add formatted files to staging if `lint-staged` is used, or ensure format runs effectively.
 - [ ] Task: Create `.husky/pre-push` hook to run `test:all` and `build:all`.
 - [ ] Task: Conductor - User Manual Verification 'Hook Implementation' (Protocol in workflow.md)

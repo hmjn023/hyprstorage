@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory
 
 class HyperStorageScreen(menu: HyperStorageMenu, playerInventory: Inventory, title: Component) :
     AbstractContainerScreen<HyperStorageMenu>(menu, playerInventory, title) {
-    private val TEXTURE =
+    private val texture =
         ResourceLocation.fromNamespaceAndPath(
             "minecraft",
             "textures/gui/container/dispenser.png",
@@ -36,6 +36,6 @@ class HyperStorageScreen(menu: HyperStorageMenu, playerInventory: Inventory, tit
     ) {
         val x = (width - imageWidth) / 2
         val y = (height - imageHeight) / 2
-        guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight)
+        guiGraphics.blit(texture, x, y, 0, 0, imageWidth, imageHeight)
     }
 }

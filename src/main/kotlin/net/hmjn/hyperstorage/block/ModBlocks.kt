@@ -5,9 +5,7 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.MapColor
 import net.neoforged.neoforge.registries.DeferredRegister
-
-// THIS LINE IS REQUIRED FOR USING PROPERTY DELEGATES
-import thedarkcolour.kotlinforforge.neoforge.forge.getValue
+import thedarkcolour.kotlinforforge.neoforge.forge.getValue // THIS LINE IS REQUIRED FOR USING PROPERTY DELEGATES
 
 object ModBlocks {
     val REGISTRY = DeferredRegister.createBlocks(Hyperstorage.ID)
