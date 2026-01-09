@@ -26,7 +26,7 @@ mod tests {
     fn test_alloc_and_write() {
         let size = 100;
         let ptr = alloc(size);
-        
+
         // Test 1: Pointer should not be null
         assert!(!ptr.is_null(), "Allocated pointer is null");
 
@@ -36,12 +36,12 @@ mod tests {
             for i in 0..size {
                 slice[i] = (i % 255) as u8;
             }
-            
+
             // Verify written data
             for i in 0..size {
                 assert_eq!(slice[i], (i % 255) as u8);
             }
-            
+
             // Clean up (should not panic)
             dealloc(ptr, size);
         }

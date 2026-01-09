@@ -19,21 +19,20 @@ pub fn add(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 
     unsafe {
         // Find existing item with same item_id, nbt_hash, and location_id
         for i in 0..ITEM_IDS.len() {
-            if ITEM_IDS[i] == item_id 
-                && NBT_HASHES[i] == nbt_hash 
-                && LOCATION_IDS[i] == location_id {
+            if ITEM_IDS[i] == item_id && NBT_HASHES[i] == nbt_hash && LOCATION_IDS[i] == location_id
+            {
                 // Update existing item
                 QUANTITIES[i] += quantity;
                 return QUANTITIES[i];
             }
         }
-        
+
         // Add new item
         ITEM_IDS.push(item_id);
         NBT_HASHES.push(nbt_hash);
         QUANTITIES.push(quantity);
         LOCATION_IDS.push(location_id);
-        
+
         quantity
     }
 }
@@ -41,10 +40,8 @@ pub fn add(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 
 pub fn remove(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
     unsafe {
         for i in 0..ITEM_IDS.len() {
-            if ITEM_IDS[i] == item_id 
-                && NBT_HASHES[i] == nbt_hash 
-                && LOCATION_IDS[i] == location_id {
-                
+            if ITEM_IDS[i] == item_id && NBT_HASHES[i] == nbt_hash && LOCATION_IDS[i] == location_id
+            {
                 if QUANTITIES[i] <= quantity {
                     // Remove entire stack
                     // Use swap_remove for O(1) if order doesn't matter, but current lib.rs used remove (O(n))
@@ -62,7 +59,7 @@ pub fn remove(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u
                 }
             }
         }
-        
+
         // Item not found
         0
     }
@@ -93,9 +90,7 @@ pub fn count_location(location_id: u32) -> u64 {
 }
 
 pub fn count_unique() -> u32 {
-    unsafe {
-        ITEM_IDS.len() as u32
-    }
+    unsafe { ITEM_IDS.len() as u32 }
 }
 
 pub fn clear_location(location_id: u32) -> u32 {
@@ -131,19 +126,19 @@ mod tests {
         // Add item
         let total = add(1, 100, 10, 1);
         assert_eq!(total, 10);
-        
+
         // Count specific item
         assert_eq!(count_item(1, 100), 10);
-        
+
         // Add more of same
         let total = add(1, 100, 5, 1);
         assert_eq!(total, 15);
         assert_eq!(count_item(1, 100), 15);
-        
+
         // Add different item
         add(2, 200, 20, 1);
         assert_eq!(count_item(2, 200), 20);
-        
+
         // Check unique count
         assert_eq!(count_unique(), 2);
     }
@@ -152,35 +147,35 @@ mod tests {
     fn test_remove() {
         setup();
         add(1, 100, 10, 1);
-        
+
         // Remove partial
         let remaining = remove(1, 100, 4, 1);
         assert_eq!(remaining, 6);
         assert_eq!(count_item(1, 100), 6);
-        
+
         // Remove all
         let remaining = remove(1, 100, 6, 1);
         assert_eq!(remaining, 0);
         assert_eq!(count_item(1, 100), 0);
-        
+
         // Unique count should decrease (implementation detail: usually removes from vector)
         // If we remove the entry completely
         assert_eq!(count_unique(), 0);
     }
-    
+
     #[test]
     fn test_location_management() {
         setup();
         add(1, 100, 10, 1); // Loc 1
         add(1, 100, 20, 2); // Loc 2
-        
+
         // Location counts
         assert_eq!(count_location(1), 10);
         assert_eq!(count_location(2), 20);
-        
+
         // Total item count (all locations)
         assert_eq!(count_item(1, 100), 30);
-        
+
         // Clear location
         let removed = clear_location(1);
         assert_eq!(removed, 1); // 1 stack removed

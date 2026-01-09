@@ -67,7 +67,7 @@ mod tests {
             dealloc(ptr, size);
         }
     }
-    
+
     #[test]
     fn test_api_inventory() {
         init_inventory();
