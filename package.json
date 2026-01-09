@@ -16,6 +16,10 @@
     "format:rust": "cd src/main/rust && cargo fmt",
     "test:rust": "cd src/main/rust && cargo test",
     "build:rust": "cd src/main/rust && cargo build --target wasm32-unknown-unknown --release",
+    "lint:all": "npm run lint:kotlin && npm run lint:rust",
+    "format:all": "npm run format:kotlin && npm run format:rust",
+    "test:all": "npm run test:kotlin && npm run test:rust",
+    "build:all": "npm run build:kotlin && npm run build:rust",
     "prepare": "husky"
   },
   "keywords": [],
