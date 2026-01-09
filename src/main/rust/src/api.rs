@@ -7,7 +7,10 @@ pub extern "C" fn alloc(size: usize) -> *mut u8 {
 }
 
 #[no_mangle]
-pub extern "C" fn dealloc(ptr: *mut u8, size: usize) {
+/// # Safety
+///
+/// The `ptr` must have been allocated by `alloc` with the same `size`.
+pub unsafe extern "C" fn dealloc(ptr: *mut u8, size: usize) {
     allocator::dealloc(ptr, size)
 }
 
@@ -60,7 +63,9 @@ mod tests {
         let size = 10;
         let ptr = alloc(size);
         assert!(!ptr.is_null());
-        dealloc(ptr, size);
+        unsafe {
+            dealloc(ptr, size);
+        }
     }
     
     #[test]

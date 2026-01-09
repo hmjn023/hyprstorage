@@ -1,3 +1,5 @@
+#![allow(static_mut_refs)]
+
 // Structure of Arrays for inventory management
 static mut ITEM_IDS: Vec<u32> = Vec::new();
 static mut NBT_HASHES: Vec<u64> = Vec::new();

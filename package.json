@@ -12,6 +12,10 @@
     "format:kotlin": "./gradlew ktlintFormat",
     "test:kotlin": "./gradlew test",
     "build:kotlin": "./gradlew build",
+    "lint:rust": "cd src/main/rust && cargo clippy",
+    "format:rust": "cd src/main/rust && cargo fmt",
+    "test:rust": "cd src/main/rust && cargo test",
+    "build:rust": "cd src/main/rust && cargo build --target wasm32-unknown-unknown --release",
     "prepare": "husky"
   },
   "keywords": [],

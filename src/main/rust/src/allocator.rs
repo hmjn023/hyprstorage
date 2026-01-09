@@ -10,10 +10,12 @@ pub fn alloc(size: usize) -> *mut u8 {
 }
 
 /// Deallocates memory at `ptr` with `size` bytes.
-pub fn dealloc(ptr: *mut u8, size: usize) {
-    unsafe {
-        let _ = Vec::from_raw_parts(ptr, 0, size);
-    }
+///
+/// # Safety
+///
+/// The `ptr` must have been allocated by `alloc` with the same `size`.
+pub unsafe fn dealloc(ptr: *mut u8, size: usize) {
+    let _ = Vec::from_raw_parts(ptr, 0, size);
 }
 
 #[cfg(test)]
