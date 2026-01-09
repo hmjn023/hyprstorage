@@ -9,7 +9,7 @@ object ModMenuTypes {
     val REGISTRY = DeferredRegister.create(Registries.MENU, Hyperstorage.ID)
 
     val HYPER_STORAGE_MENU =
-            REGISTRY.register("hyper_storage_menu") { ->
-                IMenuTypeExtension.create(::HyperStorageMenu)
-            }
+        REGISTRY.register("hyper_storage_menu") { ->
+            IMenuTypeExtension.create(::HyperStorageMenu)
+        }
 }

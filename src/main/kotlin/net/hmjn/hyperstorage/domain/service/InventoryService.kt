@@ -11,7 +11,11 @@ class InventoryService(private val repository: InventoryRepository) {
      * Synchronizes changes between current and previous inventory states.
      * Compares two lists of ItemInfo and updates the repository accordingly.
      */
-    fun syncInventory(locationId: Int, current: List<ItemInfo>, previous: List<ItemInfo>) {
+    fun syncInventory(
+        locationId: Int,
+        current: List<ItemInfo>,
+        previous: List<ItemInfo>,
+    ) {
         val size = current.size.coerceAtMost(previous.size)
         for (i in 0 until size) {
             val curr = current[i]

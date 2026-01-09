@@ -26,7 +26,7 @@ object InventoryManager {
     }
 
     fun getInventoryService(): InventoryService = service
-    
+
     // Low level access if needed (optional)
     fun getInventoryRepository(): InventoryRepository = repository
 }

@@ -25,16 +25,15 @@ import net.neoforged.neoforge.items.ItemStackHandler
  * state management
  */
 class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
-        BlockEntity(ModBlockEntities.HYPER_STORAGE_BLOCK_ENTITY.get(), pos, state), MenuProvider {
-
+    BlockEntity(ModBlockEntities.HYPER_STORAGE_BLOCK_ENTITY.get(), pos, state), MenuProvider {
     // NeoForge ItemHandler (9 slots for testing)
     val inventory =
-            object : ItemStackHandler(9) {
-                override fun onContentsChanged(slot: Int) {
-                    super.onContentsChanged(slot)
-                    this@HyperStorageBlockEntity.onInventoryChanged()
-                }
+        object : ItemStackHandler(9) {
+            override fun onContentsChanged(slot: Int) {
+                super.onContentsChanged(slot)
+                this@HyperStorageBlockEntity.onInventoryChanged()
             }
+        }
 
     // Track if inventory changed this tick
     private var inventoryChanged = false
@@ -47,12 +46,18 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
         ItemHashUtil.getLocationId(blockPos.x, blockPos.y, blockPos.z)
     }
 
-    override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+    override fun saveAdditional(
+        tag: CompoundTag,
+        registries: HolderLookup.Provider,
+    ) {
         super.saveAdditional(tag, registries)
         tag.put("Inventory", inventory.serializeNBT(registries))
     }
 
-    override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+    override fun loadAdditional(
+        tag: CompoundTag,
+        registries: HolderLookup.Provider,
+    ) {
         super.loadAdditional(tag, registries)
         inventory.deserializeNBT(registries, tag.getCompound("Inventory"))
 
@@ -94,9 +99,9 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     }
 
     override fun createMenu(
-            id: Int,
-            playerInventory: Inventory,
-            player: Player
+        id: Int,
+        playerInventory: Inventory,
+        player: Player,
     ): AbstractContainerMenu {
         return HyperStorageMenu(id, playerInventory, this)
     }
@@ -107,7 +112,7 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
             // Clear Wasm inventory for this location
             val removed = InventoryManager.getInventoryRepository().clearLocation(locationId)
             Hyperstorage.LOGGER.debug(
-                    "Cleared $removed item stacks from Wasm for location $locationId"
+                "Cleared $removed item stacks from Wasm for location $locationId",
             )
 
             // Drop physical items
@@ -122,10 +127,10 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     companion object {
         /** Server-side tick method */
         fun serverTick(
-                level: Level,
-                pos: BlockPos,
-                state: BlockState,
-                blockEntity: HyperStorageBlockEntity
+            level: Level,
+            pos: BlockPos,
+            state: BlockState,
+            blockEntity: HyperStorageBlockEntity,
         ) {
             // If inventory changed, sync with Wasm
             if (blockEntity.inventoryChanged) {
@@ -140,12 +145,13 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
         // Clear existing data for this location in Wasm
         InventoryManager.getInventoryRepository().clearLocation(locationId)
 
-        val current = (0 until inventory.slots).map { i ->
-            val stack = inventory.getStackInSlot(i)
-            val info = ItemInfo.fromItemStack(stack)
-            previousInventory[i] = info // Update snapshot
-            info
-        }
+        val current =
+            (0 until inventory.slots).map { i ->
+                val stack = inventory.getStackInSlot(i)
+                val info = ItemInfo.fromItemStack(stack)
+                previousInventory[i] = info // Update snapshot
+                info
+            }
 
         // Use Service to add all items
         val service = InventoryManager.getInventoryService()
@@ -160,9 +166,10 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
      * snapshot and sends only changes via InventoryService.
      */
     private fun syncInventoryToWasm() {
-        val current = (0 until inventory.slots).map { i ->
-            ItemInfo.fromItemStack(inventory.getStackInSlot(i))
-        }
+        val current =
+            (0 until inventory.slots).map { i ->
+                ItemInfo.fromItemStack(inventory.getStackInSlot(i))
+            }
 
         val service = InventoryManager.getInventoryService()
         service.syncInventory(locationId, current, previousInventory)
@@ -171,7 +178,7 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
         for (i in current.indices) {
             previousInventory[i] = current[i]
         }
-        
+
         Hyperstorage.LOGGER.debug("Synced slot changes to Wasm at $blockPos using InventoryService")
     }
 }

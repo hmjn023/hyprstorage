@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack
 data class ItemInfo(
     val itemId: Int,
     val nbtHash: Long,
-    val count: Long
+    val count: Long,
 ) {
     companion object {
         val EMPTY = ItemInfo(0, 0L, 0L)
@@ -20,11 +20,10 @@ data class ItemInfo(
             return ItemInfo(
                 itemId = ItemHashUtil.getItemId(stack),
                 nbtHash = ItemHashUtil.getNbtHash(stack),
-                count = stack.count.toLong()
+                count = stack.count.toLong(),
             )
         }
     }
 
     fun isEmpty(): Boolean = count <= 0 || itemId == 0
 }
-

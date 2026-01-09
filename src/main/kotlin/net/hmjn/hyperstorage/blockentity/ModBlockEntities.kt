@@ -11,8 +11,8 @@ object ModBlockEntities {
     val REGISTRY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Hyperstorage.ID)
 
     val HYPER_STORAGE_BLOCK_ENTITY =
-            REGISTRY.register("hyper_storage_block_entity") { ->
-                BlockEntityType.Builder.of(::HyperStorageBlockEntity, ModBlocks.HYPER_STORAGE_BLOCK)
-                        .build(null)
-            }
+        REGISTRY.register("hyper_storage_block_entity") { ->
+            BlockEntityType.Builder.of(::HyperStorageBlockEntity, ModBlocks.HYPER_STORAGE_BLOCK)
+                .build(null)
+        }
 }

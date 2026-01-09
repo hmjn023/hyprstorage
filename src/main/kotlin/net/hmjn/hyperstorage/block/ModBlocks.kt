@@ -23,7 +23,7 @@ object ModBlocks {
             BlockBehaviour.Properties.of()
                 .mapColor(MapColor.METAL)
                 .strength(5.0f, 6.0f)
-                .requiresCorrectToolForDrops()
+                .requiresCorrectToolForDrops(),
         )
     }
 }

@@ -1,6 +1,5 @@
 package net.hmjn.hyperstorage.domain.service
 
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import net.hmjn.hyperstorage.domain.model.ItemInfo
@@ -23,9 +22,9 @@ class InventoryServiceTest {
         val locId = 1
         val current = listOf(ItemInfo(1, 100L, 10L))
         val previous = listOf(ItemInfo.EMPTY)
-        
+
         service.syncInventory(locId, current, previous)
-        
+
         verify { repository.addItem(1, 100L, 10L, locId) }
     }
 
@@ -34,9 +33,9 @@ class InventoryServiceTest {
         val locId = 1
         val current = listOf(ItemInfo.EMPTY)
         val previous = listOf(ItemInfo(1, 100L, 10L))
-        
+
         service.syncInventory(locId, current, previous)
-        
+
         verify { repository.removeItem(1, 100L, 10L, locId) }
     }
 
@@ -45,9 +44,9 @@ class InventoryServiceTest {
         val locId = 1
         val current = listOf(ItemInfo(2, 200L, 5L))
         val previous = listOf(ItemInfo(1, 100L, 10L))
-        
+
         service.syncInventory(locId, current, previous)
-        
+
         verify { repository.removeItem(1, 100L, 10L, locId) }
         verify { repository.addItem(2, 200L, 5L, locId) }
     }

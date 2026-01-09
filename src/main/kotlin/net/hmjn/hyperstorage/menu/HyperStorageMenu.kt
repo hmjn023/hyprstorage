@@ -11,21 +11,20 @@ import net.neoforged.neoforge.items.SlotItemHandler
 
 /** Menu for Hyper Storage Block Simple 9-slot inventory GUI */
 class HyperStorageMenu(
-        id: Int,
-        playerInventory: Inventory,
-        private val blockEntity: HyperStorageBlockEntity
+    id: Int,
+    playerInventory: Inventory,
+    private val blockEntity: HyperStorageBlockEntity,
 ) : AbstractContainerMenu(ModMenuTypes.HYPER_STORAGE_MENU.get(), id) {
-
     // Constructor for client-side (from packet)
     constructor(
-            id: Int,
-            playerInventory: Inventory,
-            extraData: FriendlyByteBuf
+        id: Int,
+        playerInventory: Inventory,
+        extraData: FriendlyByteBuf,
     ) : this(
-            id,
-            playerInventory,
-            playerInventory.player.level().getBlockEntity(extraData.readBlockPos()) as
-                    HyperStorageBlockEntity
+        id,
+        playerInventory,
+        playerInventory.player.level().getBlockEntity(extraData.readBlockPos()) as
+            HyperStorageBlockEntity,
     )
 
     init {
@@ -62,7 +61,10 @@ class HyperStorageMenu(
         }
     }
 
-    override fun quickMoveStack(player: Player, index: Int): ItemStack {
+    override fun quickMoveStack(
+        player: Player,
+        index: Int,
+    ): ItemStack {
         var itemstack = ItemStack.EMPTY
         val slot = slots[index]
 
@@ -95,9 +97,9 @@ class HyperStorageMenu(
     override fun stillValid(player: Player): Boolean {
         // Just check distance
         return player.distanceToSqr(
-                blockEntity.blockPos.x + 0.5,
-                blockEntity.blockPos.y + 0.5,
-                blockEntity.blockPos.z + 0.5
+            blockEntity.blockPos.x + 0.5,
+            blockEntity.blockPos.y + 0.5,
+            blockEntity.blockPos.z + 0.5,
         ) <= 64.0
     }
 }

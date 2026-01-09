@@ -1,12 +1,11 @@
 package net.hmjn.hyperstorage.util
 
-import java.security.MessageDigest
 import net.hmjn.hyperstorage.core.WasmIdManager
 import net.minecraft.world.item.ItemStack
+import java.security.MessageDigest
 
 /** Utility for hashing items and NBT data for Wasm integration */
 object ItemHashUtil {
-
     fun getItemId(stack: ItemStack): Int {
         // Use the centralized ID manager for safe, collision-free IDs
         return WasmIdManager.getId(stack)
@@ -35,7 +34,11 @@ object ItemHashUtil {
     }
 
     /** Get location ID from BlockPos Simple hash of coordinates */
-    fun getLocationId(x: Int, y: Int, z: Int): Int {
+    fun getLocationId(
+        x: Int,
+        y: Int,
+        z: Int,
+    ): Int {
         // Simple but effective hash
         var result = x
         result = 31 * result + y

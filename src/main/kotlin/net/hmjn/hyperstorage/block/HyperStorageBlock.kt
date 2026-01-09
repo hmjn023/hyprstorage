@@ -16,22 +16,24 @@ import net.minecraft.world.phys.BlockHitResult
 
 /** Hyper Storage Block - A high-performance storage block with Wasm integration */
 class HyperStorageBlock(properties: Properties) : Block(properties), EntityBlock {
-
-    override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
+    override fun newBlockEntity(
+        pos: BlockPos,
+        state: BlockState,
+    ): BlockEntity {
         return HyperStorageBlockEntity(pos, state)
     }
 
     override fun <T : BlockEntity> getTicker(
-            level: Level,
-            state: BlockState,
-            blockEntityType: BlockEntityType<T>
+        level: Level,
+        state: BlockState,
+        blockEntityType: BlockEntityType<T>,
     ): BlockEntityTicker<T>? {
         return if (level.isClientSide) {
             null
         } else {
             createTickerHelper(
-                    blockEntityType,
-                    ModBlockEntities.HYPER_STORAGE_BLOCK_ENTITY.get()
+                blockEntityType,
+                ModBlockEntities.HYPER_STORAGE_BLOCK_ENTITY.get(),
             ) { level, pos, state, blockEntity ->
                 HyperStorageBlockEntity.serverTick(level, pos, state, blockEntity)
             }
@@ -40,19 +42,19 @@ class HyperStorageBlock(properties: Properties) : Block(properties), EntityBlock
 
     @Suppress("UNCHECKED_CAST")
     private fun <E : BlockEntity, A : BlockEntity> createTickerHelper(
-            givenType: BlockEntityType<A>,
-            expectedType: BlockEntityType<E>,
-            ticker: BlockEntityTicker<in E>
+        givenType: BlockEntityType<A>,
+        expectedType: BlockEntityType<E>,
+        ticker: BlockEntityTicker<in E>,
     ): BlockEntityTicker<A>? {
         return if (expectedType == givenType) ticker as BlockEntityTicker<A> else null
     }
 
     override fun useWithoutItem(
-            state: BlockState,
-            level: Level,
-            pos: BlockPos,
-            player: Player,
-            hitResult: BlockHitResult
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        player: Player,
+        hitResult: BlockHitResult,
     ): InteractionResult {
         if (!level.isClientSide) {
             val blockEntity = level.getBlockEntity(pos)
@@ -65,11 +67,11 @@ class HyperStorageBlock(properties: Properties) : Block(properties), EntityBlock
     }
 
     override fun onRemove(
-            state: BlockState,
-            level: Level,
-            pos: BlockPos,
-            newState: BlockState,
-            movedByPiston: Boolean
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        newState: BlockState,
+        movedByPiston: Boolean,
     ) {
         if (!state.`is`(newState.block)) {
             val blockEntity = level.getBlockEntity(pos)

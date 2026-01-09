@@ -9,12 +9,11 @@ import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 
 @EventBusSubscriber(
-        modid = Hyperstorage.ID,
-        bus = EventBusSubscriber.Bus.MOD,
-        value = [Dist.CLIENT]
+    modid = Hyperstorage.ID,
+    bus = EventBusSubscriber.Bus.MOD,
+    value = [Dist.CLIENT],
 )
 object ClientSetup {
-
     @SubscribeEvent
     fun registerScreens(event: RegisterMenuScreensEvent) {
         // Register the screen for the menu type

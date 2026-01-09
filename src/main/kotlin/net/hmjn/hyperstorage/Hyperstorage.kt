@@ -38,16 +38,16 @@ object Hyperstorage {
         net.hmjn.hyperstorage.menu.ModMenuTypes.REGISTRY.register(MOD_BUS)
 
         val obj =
-                runForDist(
-                        clientTarget = {
-                            MOD_BUS.addListener(::onClientSetup)
-                            Minecraft.getInstance()
-                        },
-                        serverTarget = {
-                            MOD_BUS.addListener(::onServerSetup)
-                            "test"
-                        }
-                )
+            runForDist(
+                clientTarget = {
+                    MOD_BUS.addListener(::onClientSetup)
+                    Minecraft.getInstance()
+                },
+                serverTarget = {
+                    MOD_BUS.addListener(::onServerSetup)
+                    "test"
+                },
+            )
 
         println(obj)
     }
@@ -74,7 +74,7 @@ object Hyperstorage {
             val wasmStream = javaClass.getResourceAsStream("/wasm/hyper_visor_storage_wasm.wasm")
             if (wasmStream != null) {
                 net.hmjn.hyperstorage.infrastructure.InventoryManager.loadWasm(wasmStream)
-                
+
                 // Test call using repository (optional test)
                 val repo = net.hmjn.hyperstorage.infrastructure.InventoryManager.getInventoryRepository()
                 val result = repo.addItem(1, 0L, 10L, 0)
@@ -90,8 +90,8 @@ object Hyperstorage {
     @SubscribeEvent
     fun registerCapabilities(event: net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent) {
         event.registerBlockEntity(
-                net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
-                net.hmjn.hyperstorage.blockentity.ModBlockEntities.HYPER_STORAGE_BLOCK_ENTITY.get()
+            net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
+            net.hmjn.hyperstorage.blockentity.ModBlockEntities.HYPER_STORAGE_BLOCK_ENTITY.get(),
         ) { blockEntity: net.hmjn.hyperstorage.blockentity.HyperStorageBlockEntity, _ ->
             blockEntity.inventory
         }

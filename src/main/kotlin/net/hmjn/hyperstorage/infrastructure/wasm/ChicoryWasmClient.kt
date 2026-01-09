@@ -22,11 +22,13 @@ class ChicoryWasmClient {
      * Calls a Wasm function with the given name and arguments.
      * Returns the result as a Long.
      */
-    fun callFunction(name: String, vararg args: Long): Long {
+    fun callFunction(
+        name: String,
+        vararg args: Long,
+    ): Long {
         val inst = instance ?: throw IllegalStateException("Wasm instance not loaded")
         val export = inst.export(name) ?: throw IllegalArgumentException("Wasm function '$name' not found")
         val results = export.apply(*args)
         return if (results != null && results.isNotEmpty()) results[0] else 0L
     }
 }
-

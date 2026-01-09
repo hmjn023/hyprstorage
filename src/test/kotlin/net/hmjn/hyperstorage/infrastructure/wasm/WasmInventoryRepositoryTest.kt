@@ -23,7 +23,7 @@ class WasmInventoryRepositoryTest {
         // Add 10 items of type 1 at loc 1
         val result = repository.addItem(1, 100L, 10L, 1)
         assertEquals(10L, result)
-        
+
         // Count it
         assertEquals(10L, repository.getItemCount(1, 100L))
     }

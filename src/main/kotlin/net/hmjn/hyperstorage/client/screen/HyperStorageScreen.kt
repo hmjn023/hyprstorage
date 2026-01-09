@@ -8,15 +8,19 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
 
 class HyperStorageScreen(menu: HyperStorageMenu, playerInventory: Inventory, title: Component) :
-        AbstractContainerScreen<HyperStorageMenu>(menu, playerInventory, title) {
-
+    AbstractContainerScreen<HyperStorageMenu>(menu, playerInventory, title) {
     private val TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(
-                    "minecraft",
-                    "textures/gui/container/dispenser.png"
-            )
+        ResourceLocation.fromNamespaceAndPath(
+            "minecraft",
+            "textures/gui/container/dispenser.png",
+        )
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+    override fun render(
+        guiGraphics: GuiGraphics,
+        mouseX: Int,
+        mouseY: Int,
+        partialTick: Float,
+    ) {
         // Render the background
         renderBackground(guiGraphics, mouseX, mouseY, partialTick)
         super.render(guiGraphics, mouseX, mouseY, partialTick)
@@ -24,7 +28,12 @@ class HyperStorageScreen(menu: HyperStorageMenu, playerInventory: Inventory, tit
         renderTooltip(guiGraphics, mouseX, mouseY)
     }
 
-    override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {
+    override fun renderBg(
+        guiGraphics: GuiGraphics,
+        partialTick: Float,
+        mouseX: Int,
+        mouseY: Int,
+    ) {
         val x = (width - imageWidth) / 2
         val y = (height - imageHeight) / 2
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight)
