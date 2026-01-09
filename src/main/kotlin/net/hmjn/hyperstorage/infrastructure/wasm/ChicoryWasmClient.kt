@@ -24,9 +24,9 @@ class ChicoryWasmClient {
      */
     fun callFunction(name: String, vararg args: Long): Long {
         val inst = instance ?: throw IllegalStateException("Wasm instance not loaded")
-        val export = inst.export(name)
+        val export = inst.export(name) ?: throw IllegalArgumentException("Wasm function '$name' not found")
         val results = export.apply(*args)
-        return if (results.isNotEmpty()) results[0] else 0L
+        return if (results != null && results.isNotEmpty()) results[0] else 0L
     }
 }
 
