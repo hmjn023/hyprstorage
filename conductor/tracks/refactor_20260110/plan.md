@@ -8,12 +8,12 @@
 - [x] Task: Update `src/main/rust/src/lib.rs` to expose modules and verify Wasm compilation. [4dacd84]
 - [x] Task: Conductor - User Manual Verification 'Rust Core Modularization' (Protocol in workflow.md)
 
-## Phase 2: Kotlin Infrastructure & Domain Layer
+## Phase 2: Kotlin Infrastructure & Domain Layer [checkpoint: 0c4b605]
 
 - [x] Task: Create `ChicoryWasmClient` in `infrastructure/wasm` implementing low-level Wasm interaction (replacing `WasmBridge` logic) with unit tests. [a9b1dff]
 - [x] Task: Define `InventoryRepository` interface in `domain/repository` and implement it using `ChicoryWasmClient`. [e094596]
 - [x] Task: Create `InventoryService` in `domain/service` to handle high-level logic (e.g., sync logic) with unit tests. [f3e026f]
-- [ ] Task: Conductor - User Manual Verification 'Kotlin Infrastructure & Domain Layer' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Kotlin Infrastructure & Domain Layer' (Protocol in workflow.md)
 
 ## Phase 3: BlockEntity Integration & Cleanup
 
