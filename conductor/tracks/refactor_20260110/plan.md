@@ -3,7 +3,7 @@
 ## Phase 1: Rust Core Modularization
 
 - [x] Task: Create `src/main/rust/src/allocator.rs` and implement memory management functions (`alloc`, `dealloc`) with tests. [26df498]
-- [ ] Task: Create `src/main/rust/src/inventory.rs` and migrate SoA data structures and logic (`add`, `remove`, `count`) with unit tests.
+- [x] Task: Create `src/main/rust/src/inventory.rs` and migrate SoA data structures and logic (`add`, `remove`, `count`) with unit tests. [f021eea]
 - [ ] Task: Create `src/main/rust/src/api.rs` and implement `extern "C"` functions delegating to `inventory` and `allocator`.
 - [ ] Task: Update `src/main/rust/src/lib.rs` to expose modules and verify Wasm compilation.
 - [ ] Task: Conductor - User Manual Verification 'Rust Core Modularization' (Protocol in workflow.md)
