@@ -1,10 +1,10 @@
 # Plan: Git Hooks Integration (Husky)
 
-## Phase 1: Environment Setup & Husky Installation
+## Phase 1: Environment Setup & Husky Installation [checkpoint: 6223c61]
 - [x] Task: Initialize `package.json` if not present. [a081cf6]
 - [x] Task: Install `husky` and `lint-staged` as devDependencies. [1498c35]
 - [x] Task: Initialize Husky (`npx husky init`) and configure `npm install` hook. [fc15b2b]
-- [ ] Task: Conductor - User Manual Verification 'Environment Setup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Environment Setup' (Protocol in workflow.md)
 
 ## Phase 2: Script Definition (Kotlin & Rust)
 - [ ] Task: Add `ktlint` configuration to `build.gradle` (if missing) to support formatting tasks.
