@@ -8,7 +8,7 @@
 
 ## Phase 2: Script Definition (Kotlin & Rust)
 - [x] Task: Add `ktlint` configuration to `build.gradle` (if missing) to support formatting tasks. [6c7a05e]
-- [ ] Task: Define scripts in `package.json` for Kotlin operations (`lint:kotlin`, `format:kotlin`, `test:kotlin`, `build:kotlin`).
+- [x] Task: Define scripts in `package.json` for Kotlin operations (`lint:kotlin`, `format:kotlin`, `test:kotlin`, `build:kotlin`). [8dc1c2b]
 - [ ] Task: Define scripts in `package.json` for Rust operations (`lint:rust`, `format:rust`, `test:rust`, `build:rust`).
 - [ ] Task: Define composite scripts (`lint:all`, `format:all`, `test:all`, `build:all`).
 - [ ] Task: Conductor - User Manual Verification 'Script Definition' (Protocol in workflow.md)
