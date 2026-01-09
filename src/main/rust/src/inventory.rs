@@ -1,23 +1,10 @@
-pub mod allocator;
-pub mod inventory;
-use std::mem;
-use std::collections::HashMap;
-
 // Structure of Arrays for inventory management
 static mut ITEM_IDS: Vec<u32> = Vec::new();
 static mut NBT_HASHES: Vec<u64> = Vec::new();
 static mut QUANTITIES: Vec<u64> = Vec::new();
 static mut LOCATION_IDS: Vec<u32> = Vec::new();
 
-// Simple test function
-#[no_mangle]
-pub extern "C" fn add(a: i32, b: i32) -> i32 {
-    a + b
-}
-
-// Initialize inventory system
-#[no_mangle]
-pub extern "C" fn init_inventory() {
+pub fn init() {
     unsafe {
         ITEM_IDS.clear();
         NBT_HASHES.clear();
@@ -26,10 +13,7 @@ pub extern "C" fn init_inventory() {
     }
 }
 
-// Add or update an item in the inventory
-// Returns the new quantity
-#[no_mangle]
-pub extern "C" fn add_item(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
+pub fn add(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
     unsafe {
         // Find existing item with same item_id, nbt_hash, and location_id
         for i in 0..ITEM_IDS.len() {
@@ -52,10 +36,7 @@ pub extern "C" fn add_item(item_id: u32, nbt_hash: u64, quantity: u64, location_
     }
 }
 
-// Remove items from inventory
-// Returns the remaining quantity (0 if all removed)
-#[no_mangle]
-pub extern "C" fn remove_item(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
+pub fn remove(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
     unsafe {
         for i in 0..ITEM_IDS.len() {
             if ITEM_IDS[i] == item_id 
@@ -64,6 +45,9 @@ pub extern "C" fn remove_item(item_id: u32, nbt_hash: u64, quantity: u64, locati
                 
                 if QUANTITIES[i] <= quantity {
                     // Remove entire stack
+                    // Use swap_remove for O(1) if order doesn't matter, but current lib.rs used remove (O(n))
+                    // Maintaining order is usually safer if index stability matters, but here IDs are SoA.
+                    // We stick to remove to match exact behavior of lib.rs for now.
                     ITEM_IDS.remove(i);
                     NBT_HASHES.remove(i);
                     QUANTITIES.remove(i);
@@ -82,9 +66,7 @@ pub extern "C" fn remove_item(item_id: u32, nbt_hash: u64, quantity: u64, locati
     }
 }
 
-// Get total quantity of a specific item across all locations
-#[no_mangle]
-pub extern "C" fn get_item_count(item_id: u32, nbt_hash: u64) -> u64 {
+pub fn count_item(item_id: u32, nbt_hash: u64) -> u64 {
     unsafe {
         let mut total = 0u64;
         for i in 0..ITEM_IDS.len() {
@@ -96,9 +78,7 @@ pub extern "C" fn get_item_count(item_id: u32, nbt_hash: u64) -> u64 {
     }
 }
 
-// Get total quantity at a specific location
-#[no_mangle]
-pub extern "C" fn get_location_count(location_id: u32) -> u64 {
+pub fn count_location(location_id: u32) -> u64 {
     unsafe {
         let mut total = 0u64;
         for i in 0..LOCATION_IDS.len() {
@@ -110,17 +90,13 @@ pub extern "C" fn get_location_count(location_id: u32) -> u64 {
     }
 }
 
-// Get total number of unique item types
-#[no_mangle]
-pub extern "C" fn get_unique_item_count() -> u32 {
+pub fn count_unique() -> u32 {
     unsafe {
         ITEM_IDS.len() as u32
     }
 }
 
-// Clear all items at a specific location
-#[no_mangle]
-pub extern "C" fn clear_location(location_id: u32) -> u32 {
+pub fn clear_location(location_id: u32) -> u32 {
     unsafe {
         let mut removed = 0u32;
         let mut i = 0;
@@ -139,18 +115,74 @@ pub extern "C" fn clear_location(location_id: u32) -> u32 {
     }
 }
 
-// Memory management functions
-// #[no_mangle]
-// pub extern "C" fn alloc(size: usize) -> *mut u8 {
-//     let mut buf = Vec::with_capacity(size);
-//     let ptr = buf.as_mut_ptr();
-//     mem::forget(buf);
-//     ptr
-// }
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-// #[no_mangle]
-// pub extern "C" fn dealloc(ptr: *mut u8, size: usize) {
-//     unsafe {
-//         let _ = Vec::from_raw_parts(ptr, 0, size);
-//     }
-// }
+    fn setup() {
+        init();
+    }
+
+    #[test]
+    fn test_add_and_count() {
+        setup();
+        // Add item
+        let total = add(1, 100, 10, 1);
+        assert_eq!(total, 10);
+        
+        // Count specific item
+        assert_eq!(count_item(1, 100), 10);
+        
+        // Add more of same
+        let total = add(1, 100, 5, 1);
+        assert_eq!(total, 15);
+        assert_eq!(count_item(1, 100), 15);
+        
+        // Add different item
+        add(2, 200, 20, 1);
+        assert_eq!(count_item(2, 200), 20);
+        
+        // Check unique count
+        assert_eq!(count_unique(), 2);
+    }
+
+    #[test]
+    fn test_remove() {
+        setup();
+        add(1, 100, 10, 1);
+        
+        // Remove partial
+        let remaining = remove(1, 100, 4, 1);
+        assert_eq!(remaining, 6);
+        assert_eq!(count_item(1, 100), 6);
+        
+        // Remove all
+        let remaining = remove(1, 100, 6, 1);
+        assert_eq!(remaining, 0);
+        assert_eq!(count_item(1, 100), 0);
+        
+        // Unique count should decrease (implementation detail: usually removes from vector)
+        // If we remove the entry completely
+        assert_eq!(count_unique(), 0);
+    }
+    
+    #[test]
+    fn test_location_management() {
+        setup();
+        add(1, 100, 10, 1); // Loc 1
+        add(1, 100, 20, 2); // Loc 2
+        
+        // Location counts
+        assert_eq!(count_location(1), 10);
+        assert_eq!(count_location(2), 20);
+        
+        // Total item count (all locations)
+        assert_eq!(count_item(1, 100), 30);
+        
+        // Clear location
+        let removed = clear_location(1);
+        assert_eq!(removed, 1); // 1 stack removed
+        assert_eq!(count_location(1), 0);
+        assert_eq!(count_location(2), 20);
+    }
+}
