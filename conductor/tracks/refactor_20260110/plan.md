@@ -1,12 +1,12 @@
 # Plan: Refactoring & Architecture Overhaul
 
-## Phase 1: Rust Core Modularization
+## Phase 1: Rust Core Modularization [checkpoint: 29ff8a4]
 
 - [x] Task: Create `src/main/rust/src/allocator.rs` and implement memory management functions (`alloc`, `dealloc`) with tests. [26df498]
 - [x] Task: Create `src/main/rust/src/inventory.rs` and migrate SoA data structures and logic (`add`, `remove`, `count`) with unit tests. [f021eea]
 - [x] Task: Create `src/main/rust/src/api.rs` and implement `extern "C"` functions delegating to `inventory` and `allocator`. [4ae772f]
 - [x] Task: Update `src/main/rust/src/lib.rs` to expose modules and verify Wasm compilation. [4dacd84]
-- [ ] Task: Conductor - User Manual Verification 'Rust Core Modularization' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Rust Core Modularization' (Protocol in workflow.md)
 
 ## Phase 2: Kotlin Infrastructure & Domain Layer
 
