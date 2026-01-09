@@ -15,9 +15,9 @@
 - [x] Task: Create `InventoryService` in `domain/service` to handle high-level logic (e.g., sync logic) with unit tests. [f3e026f]
 - [x] Task: Conductor - User Manual Verification 'Kotlin Infrastructure & Domain Layer' (Protocol in workflow.md)
 
-## Phase 3: BlockEntity Integration & Cleanup
+## Phase 3: BlockEntity Integration & Cleanup [checkpoint: 7395d6c]
 
 - [x] Task: Refactor `HyperStorageBlockEntity` to use `InventoryService` instead of direct `WasmBridge` calls. [b6f6cb3]
 - [x] Task: Remove obsolete `WasmBridge.kt` and cleanup unused code. [b6f6cb3]
 - [x] Task: Verify full system integration (Start game, place block, check logs).
-- [ ] Task: Conductor - User Manual Verification 'BlockEntity Integration & Cleanup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'BlockEntity Integration & Cleanup' (Protocol in workflow.md)
