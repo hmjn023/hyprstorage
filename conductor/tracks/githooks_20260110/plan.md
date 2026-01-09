@@ -2,7 +2,7 @@
 
 ## Phase 1: Environment Setup & Husky Installation
 - [x] Task: Initialize `package.json` if not present. [a081cf6]
-- [ ] Task: Install `husky` and `lint-staged` as devDependencies.
+- [x] Task: Install `husky` and `lint-staged` as devDependencies. [1498c35]
 - [ ] Task: Initialize Husky (`npx husky init`) and configure `npm install` hook.
 - [ ] Task: Conductor - User Manual Verification 'Environment Setup' (Protocol in workflow.md)
 
