@@ -12,7 +12,7 @@
 
 - [x] Task: Create `ChicoryWasmClient` in `infrastructure/wasm` implementing low-level Wasm interaction (replacing `WasmBridge` logic) with unit tests. [a9b1dff]
 - [x] Task: Define `InventoryRepository` interface in `domain/repository` and implement it using `ChicoryWasmClient`. [e094596]
-- [ ] Task: Create `InventoryService` in `domain/service` to handle high-level logic (e.g., sync logic) with unit tests.
+- [x] Task: Create `InventoryService` in `domain/service` to handle high-level logic (e.g., sync logic) with unit tests. [f3e026f]
 - [ ] Task: Conductor - User Manual Verification 'Kotlin Infrastructure & Domain Layer' (Protocol in workflow.md)
 
 ## Phase 3: BlockEntity Integration & Cleanup
