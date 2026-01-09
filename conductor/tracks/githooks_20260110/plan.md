@@ -20,6 +20,6 @@
 - [x] Task: Conductor - User Manual Verification 'Hook Implementation' (Protocol in workflow.md)
 
 ## Phase 4: Validation
-- [ ] Task: Verify `pre-commit` by attempting to commit unformatted code.
-- [ ] Task: Verify `pre-push` by attempting to push (dry-run or actual) and ensuring tests run.
+- [x] Task: Verify `pre-commit` by attempting to commit unformatted code.
+- [x] Task: Verify `pre-push` by attempting to push (dry-run or actual) and ensuring tests run.
 - [ ] Task: Conductor - User Manual Verification 'Validation' (Protocol in workflow.md)
