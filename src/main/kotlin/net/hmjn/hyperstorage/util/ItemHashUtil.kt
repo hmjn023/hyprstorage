@@ -1,20 +1,15 @@
 package net.hmjn.hyperstorage.util
 
 import java.security.MessageDigest
-import net.minecraft.core.registries.BuiltInRegistries
+import net.hmjn.hyperstorage.core.WasmIdManager
 import net.minecraft.world.item.ItemStack
 
 /** Utility for hashing items and NBT data for Wasm integration */
 object ItemHashUtil {
 
-    /**
-     * Get a simple integer ID for an item This is a temporary solution - will be replaced with
-     * WasmIdManager
-     */
     fun getItemId(stack: ItemStack): Int {
-        if (stack.isEmpty) return 0
-        val registryName = BuiltInRegistries.ITEM.getKey(stack.item).toString()
-        return registryName.hashCode()
+        // Use the centralized ID manager for safe, collision-free IDs
+        return WasmIdManager.getId(stack)
     }
 
     /** Calculate a deterministic hash for item data Returns 0 if no custom data */
