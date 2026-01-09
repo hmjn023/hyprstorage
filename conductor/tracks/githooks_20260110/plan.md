@@ -7,7 +7,7 @@
 - [x] Task: Conductor - User Manual Verification 'Environment Setup' (Protocol in workflow.md)
 
 ## Phase 2: Script Definition (Kotlin & Rust)
-- [ ] Task: Add `ktlint` configuration to `build.gradle` (if missing) to support formatting tasks.
+- [x] Task: Add `ktlint` configuration to `build.gradle` (if missing) to support formatting tasks. [6c7a05e]
 - [ ] Task: Define scripts in `package.json` for Kotlin operations (`lint:kotlin`, `format:kotlin`, `test:kotlin`, `build:kotlin`).
 - [ ] Task: Define scripts in `package.json` for Rust operations (`lint:rust`, `format:rust`, `test:rust`, `build:rust`).
 - [ ] Task: Define composite scripts (`lint:all`, `format:all`, `test:all`, `build:all`).
