@@ -10,7 +10,7 @@
 - [x] Task: Add `ktlint` configuration to `build.gradle` (if missing) to support formatting tasks. [6c7a05e]
 - [x] Task: Define scripts in `package.json` for Kotlin operations (`lint:kotlin`, `format:kotlin`, `test:kotlin`, `build:kotlin`). [8dc1c2b]
 - [x] Task: Define scripts in `package.json` for Rust operations (`lint:rust`, `format:rust`, `test:rust`, `build:rust`). [0e8d45b]
-- [ ] Task: Define composite scripts (`lint:all`, `format:all`, `test:all`, `build:all`).
+- [x] Task: Define composite scripts (`lint:all`, `format:all`, `test:all`, `build:all`). [1e2748c]
 - [ ] Task: Conductor - User Manual Verification 'Script Definition' (Protocol in workflow.md)
 
 ## Phase 3: Hook Implementation
