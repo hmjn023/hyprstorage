@@ -13,11 +13,11 @@
 - [x] Task: Define composite scripts (`lint:all`, `format:all`, `test:all`, `build:all`). [1e2748c]
 - [x] Task: Conductor - User Manual Verification 'Script Definition' (Protocol in workflow.md)
 
-## Phase 3: Hook Implementation
+## Phase 3: Hook Implementation [checkpoint: 92d62b3]
 - [x] Task: Create `.husky/pre-commit` hook to run `format:all` and `lint:all`. [5008488]
     - *Note:* Implement logic to re-add formatted files to staging if `lint-staged` is used, or ensure format runs effectively.
 - [x] Task: Create `.husky/pre-push` hook to run `test:all` and `build:all`. [f032a73]
-- [ ] Task: Conductor - User Manual Verification 'Hook Implementation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Hook Implementation' (Protocol in workflow.md)
 
 ## Phase 4: Validation
 - [ ] Task: Verify `pre-commit` by attempting to commit unformatted code.
