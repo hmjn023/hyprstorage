@@ -8,6 +8,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:kotlin": "./gradlew ktlintCheck",
+    "format:kotlin": "./gradlew ktlintFormat",
+    "test:kotlin": "./gradlew test",
+    "build:kotlin": "./gradlew build",
     "prepare": "husky"
   },
   "keywords": [],
