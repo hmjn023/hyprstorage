@@ -10,7 +10,7 @@
 
 ## Phase 2: Kotlin Infrastructure & Domain Layer
 
-- [ ] Task: Create `ChicoryWasmClient` in `infrastructure/wasm` implementing low-level Wasm interaction (replacing `WasmBridge` logic) with unit tests.
+- [x] Task: Create `ChicoryWasmClient` in `infrastructure/wasm` implementing low-level Wasm interaction (replacing `WasmBridge` logic) with unit tests. [a9b1dff]
 - [ ] Task: Define `InventoryRepository` interface in `domain/repository` and implement it using `ChicoryWasmClient`.
 - [ ] Task: Create `InventoryService` in `domain/service` to handle high-level logic (e.g., sync logic) with unit tests.
 - [ ] Task: Conductor - User Manual Verification 'Kotlin Infrastructure & Domain Layer' (Protocol in workflow.md)
