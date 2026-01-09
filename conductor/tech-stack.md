@@ -15,7 +15,10 @@
 
 ## 3. Build & Development Tools
 - **Gradle:** プロジェクト全体のビルド管理。Rustのコンパイル（Cargo）とリソース同期を自動化。
+- **ktlint:** Kotlinのコードスタイルチェックと自動整形。
 - **Cargo:** Rustコードのコンパイル、依存関係管理。
+- **Husky & lint-staged:** Git Hooks管理。コミット時のLint/Format、プッシュ時のTest/Buildを強制。
+- **Node.js (npm):** 開発ツールのオーケストレーション（Husky, lint-staged）。
 - **GitHub Flavored Markdown:** ドキュメント管理。
 
 ## 4. Architectural Patterns
