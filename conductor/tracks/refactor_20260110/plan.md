@@ -17,7 +17,7 @@
 
 ## Phase 3: BlockEntity Integration & Cleanup
 
-- [ ] Task: Refactor `HyperStorageBlockEntity` to use `InventoryService` instead of direct `WasmBridge` calls.
-- [ ] Task: Remove obsolete `WasmBridge.kt` and cleanup unused code.
-- [ ] Task: Verify full system integration (Start game, place block, check logs).
+- [x] Task: Refactor `HyperStorageBlockEntity` to use `InventoryService` instead of direct `WasmBridge` calls. [b6f6cb3]
+- [x] Task: Remove obsolete `WasmBridge.kt` and cleanup unused code. [b6f6cb3]
+- [x] Task: Verify full system integration (Start game, place block, check logs).
 - [ ] Task: Conductor - User Manual Verification 'BlockEntity Integration & Cleanup' (Protocol in workflow.md)
