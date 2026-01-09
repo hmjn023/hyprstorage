@@ -69,18 +69,21 @@ object Hyperstorage {
     fun onCommonSetup(event: FMLCommonSetupEvent) {
         LOGGER.log(Level.INFO, "Hello! This is working!")
 
-        // Test Wasm
+        // Load Wasm via InventoryManager
         try {
             val wasmStream = javaClass.getResourceAsStream("/wasm/hyper_visor_storage_wasm.wasm")
             if (wasmStream != null) {
-                net.hmjn.hyperstorage.core.WasmBridge.load(wasmStream)
-                val result = net.hmjn.hyperstorage.core.WasmBridge.add(10, 20)
-                LOGGER.info("Wasm Add Test: 10 + 20 = $result")
+                net.hmjn.hyperstorage.infrastructure.InventoryManager.loadWasm(wasmStream)
+                
+                // Test call using repository (optional test)
+                val repo = net.hmjn.hyperstorage.infrastructure.InventoryManager.getInventoryRepository()
+                val result = repo.addItem(1, 0L, 10L, 0)
+                LOGGER.info("Wasm Repository Test: Added 10 items, result = $result")
             } else {
                 LOGGER.error("Wasm file not found in resources!")
             }
         } catch (e: Exception) {
-            LOGGER.error("Error testing Wasm", e)
+            LOGGER.error("Error testing Wasm via InventoryManager", e)
         }
     }
 

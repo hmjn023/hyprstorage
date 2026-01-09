@@ -1,7 +1,8 @@
 package net.hmjn.hyperstorage.blockentity
 
 import net.hmjn.hyperstorage.Hyperstorage
-import net.hmjn.hyperstorage.core.WasmBridge
+import net.hmjn.hyperstorage.domain.model.ItemInfo
+import net.hmjn.hyperstorage.infrastructure.InventoryManager
 import net.hmjn.hyperstorage.menu.HyperStorageMenu
 import net.hmjn.hyperstorage.util.ItemHashUtil
 import net.minecraft.core.BlockPos
@@ -38,6 +39,9 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     // Track if inventory changed this tick
     private var inventoryChanged = false
 
+    // Snapshot of the previous tick's inventory state for diffing
+    private val previousInventory = MutableList(9) { ItemInfo.EMPTY }
+
     // Location ID for this block
     private val locationId: Int by lazy {
         ItemHashUtil.getLocationId(blockPos.x, blockPos.y, blockPos.z)
@@ -65,21 +69,14 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     /** Log current inventory state via Wasm */
     fun logInventoryState() {
         val itemCount = countItems()
-        val wasmCount = WasmBridge.getLocationCount(locationId)
-        val uniqueTypes = WasmBridge.getUniqueItemCount()
+        val repository = InventoryManager.getInventoryRepository()
+        val wasmCount = repository.getLocationCount(locationId)
+        val uniqueTypes = repository.getUniqueItemCount()
 
         Hyperstorage.LOGGER.info("Hyper Storage at $blockPos:")
         Hyperstorage.LOGGER.info("  Local inventory: $itemCount items")
         Hyperstorage.LOGGER.info("  Wasm inventory: $wasmCount items")
         Hyperstorage.LOGGER.info("  Unique item types (global): $uniqueTypes")
-
-        // Test Wasm integration
-        try {
-            val wasmResult = WasmBridge.add(itemCount, 100)
-            Hyperstorage.LOGGER.info("  Wasm calculation: $itemCount + 100 = $wasmResult")
-        } catch (e: Exception) {
-            Hyperstorage.LOGGER.error("Wasm integration error", e)
-        }
     }
 
     /** Count total items in inventory */
@@ -108,7 +105,7 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     fun drops() {
         level?.let { level ->
             // Clear Wasm inventory for this location
-            val removed = WasmBridge.clearLocation(locationId)
+            val removed = InventoryManager.getInventoryRepository().clearLocation(locationId)
             Hyperstorage.LOGGER.debug(
                     "Cleared $removed item stacks from Wasm for location $locationId"
             )
@@ -140,69 +137,41 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
 
     /** Sync full inventory state to Wasm (on load) */
     private fun syncFullInventoryToWasm() {
-        // Clear existing data for this location
-        WasmBridge.clearLocation(locationId)
+        // Clear existing data for this location in Wasm
+        InventoryManager.getInventoryRepository().clearLocation(locationId)
 
-        // Add all items and update snapshot
-        for (i in 0 until inventory.slots) {
+        val current = (0 until inventory.slots).map { i ->
             val stack = inventory.getStackInSlot(i)
-
-            // Update snapshot
-            previousInventory[i] = stack.copy()
-
-            if (!stack.isEmpty) {
-                val itemId = ItemHashUtil.getItemId(stack)
-                val nbtHash = ItemHashUtil.getNbtHash(stack)
-                val quantity = stack.count.toLong()
-
-                WasmBridge.addItem(itemId, nbtHash, quantity, locationId)
-            }
+            val info = ItemInfo.fromItemStack(stack)
+            previousInventory[i] = info // Update snapshot
+            info
         }
+
+        // Use Service to add all items
+        val service = InventoryManager.getInventoryService()
+        // Here we can just call addItem manually or reuse sync logic with an empty previous list
+        service.syncInventory(locationId, current, List(inventory.slots) { ItemInfo.EMPTY })
 
         Hyperstorage.LOGGER.debug("Synced full inventory to Wasm for location $locationId")
     }
 
-    // Snapshot of the previous tick's inventory state for diffing
-    private val previousInventory =
-            net.minecraft.core.NonNullList.withSize(9, net.minecraft.world.item.ItemStack.EMPTY)
-
     /**
      * Sync inventory changes to Wasm (incremental) Compares current inventory with previous
-     * snapshot and sends only changes.
+     * snapshot and sends only changes via InventoryService.
      */
     private fun syncInventoryToWasm() {
-        var changes = 0
-
-        for (i in 0 until inventory.slots) {
-            val currentStack = inventory.getStackInSlot(i)
-            val previousStack = previousInventory[i]
-
-            // Check if stack changed
-            if (!net.minecraft.world.item.ItemStack.matches(currentStack, previousStack)) {
-                // 1. Remove previous item if it existed
-                if (!previousStack.isEmpty) {
-                    val prevId = ItemHashUtil.getItemId(previousStack)
-                    val prevNbt = ItemHashUtil.getNbtHash(previousStack)
-                    val prevCount = previousStack.count.toLong()
-                    WasmBridge.removeItem(prevId, prevNbt, prevCount, locationId)
-                }
-
-                // 2. Add new item if it exists
-                if (!currentStack.isEmpty) {
-                    val newId = ItemHashUtil.getItemId(currentStack)
-                    val newNbt = ItemHashUtil.getNbtHash(currentStack)
-                    val newCount = currentStack.count.toLong()
-                    WasmBridge.addItem(newId, newNbt, newCount, locationId)
-                }
-
-                // 3. Update snapshot
-                previousInventory[i] = currentStack.copy()
-                changes++
-            }
+        val current = (0 until inventory.slots).map { i ->
+            ItemInfo.fromItemStack(inventory.getStackInSlot(i))
         }
 
-        if (changes > 0) {
-            Hyperstorage.LOGGER.debug("Synced $changes slot changes to Wasm at $blockPos")
+        val service = InventoryManager.getInventoryService()
+        service.syncInventory(locationId, current, previousInventory)
+
+        // Update snapshot
+        for (i in current.indices) {
+            previousInventory[i] = current[i]
         }
+        
+        Hyperstorage.LOGGER.debug("Synced slot changes to Wasm at $blockPos using InventoryService")
     }
 }
