@@ -4,7 +4,7 @@
 
 - [x] Task: Create `src/main/rust/src/allocator.rs` and implement memory management functions (`alloc`, `dealloc`) with tests. [26df498]
 - [x] Task: Create `src/main/rust/src/inventory.rs` and migrate SoA data structures and logic (`add`, `remove`, `count`) with unit tests. [f021eea]
-- [ ] Task: Create `src/main/rust/src/api.rs` and implement `extern "C"` functions delegating to `inventory` and `allocator`.
+- [x] Task: Create `src/main/rust/src/api.rs` and implement `extern "C"` functions delegating to `inventory` and `allocator`. [4ae772f]
 - [ ] Task: Update `src/main/rust/src/lib.rs` to expose modules and verify Wasm compilation.
 - [ ] Task: Conductor - User Manual Verification 'Rust Core Modularization' (Protocol in workflow.md)
 
