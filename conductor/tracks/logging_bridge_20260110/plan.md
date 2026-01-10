@@ -11,7 +11,7 @@
 - [x] Task: Implement the `log::Log` trait for a custom `WasmLogger` struct. [4ab2e02]
 - [x] Task: Create unit tests (mocking FFI if possible) for `WasmLogger` metadata handling. [af0d744]
 - [x] Task: Implement string passing logic (template + metadata) using the existing allocator. [4ab2e02]
-- [ ] Task: Conductor - User Manual Verification 'Rust-side Logger Core' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Rust-side Logger Core' (Protocol in workflow.md) [2cd2322]
 
 ## Phase 3: Integration and Initialization
 - [ ] Task: Implement a global registration function in Rust to set the `WasmLogger`.
