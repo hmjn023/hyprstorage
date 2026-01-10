@@ -26,5 +26,7 @@
 - **Clean Architecture (Kotlin):** Infrastructure, Domain, Presentation層に分離し、Wasm実装の詳細をInfrastructure層に隠蔽。
 - **Modular Rust Core:** API, Inventory, Allocatorモジュールに分割し、責務を明確化。
 - **Structure-of-Arrays (SoA):** Rust側でのメモリ効率とキャッシュヒット率を最大化するためのデータ構造。
-- **ID Translation Layer:** String (RegistryName) と u32 (WasmID) の高速変換。
+- **ID Translation Layer:** `WasmIdManager` による `String (RegistryName) ↔ u32` および `NBT Hash ↔ u32` の双方向変換。
+  - **Concurrency:** `ReadWriteLock` を用いた高並列アクセス。
+  - **Persistence:** ワールドディレクトリ内の NBT ファイル (`id_map.dat`) への自動保存・復元。
 - **FFI Logging Bridge:** Wasm (Rust) の `log` クレートをホスト (Kotlin/Log4j) に接続。Wasm内部の可視化を実現。

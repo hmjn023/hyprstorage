@@ -7,12 +7,12 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.storage.LevelResource
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.event.level.LevelEvent
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.level.storage.LevelResource
 import java.io.IOException
 import java.nio.file.Path
 
@@ -82,7 +82,7 @@ object WasmIdManager {
      */
     fun save(filePath: Path) {
         val tag = CompoundTag()
-        
+
         val itemsTag = CompoundTag()
         itemMapper.getItemMap().forEach { (name, id) ->
             itemsTag.putInt(name, id)
@@ -119,7 +119,7 @@ object WasmIdManager {
 
         try {
             val tag = NbtIo.readCompressed(filePath, NbtAccounter.unlimitedHeap()) ?: return
-            
+
             val itemMap = mutableMapOf<String, Int>()
             val itemsTag = tag.getCompound("Items")
             for (key in itemsTag.allKeys) {

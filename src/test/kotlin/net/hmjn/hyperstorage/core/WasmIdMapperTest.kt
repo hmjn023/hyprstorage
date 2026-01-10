@@ -88,7 +88,7 @@ class WasmIdMapperTest {
         assertEquals(original.getIdForName("minecraft:iron_ingot"), restored.getIdForName("minecraft:iron_ingot"))
         assertEquals(original.getNameForId(2), restored.getNameForId(2))
         assertEquals(original.getNbtId(12345L), restored.getNbtId(12345L))
-        
+
         // Ensure next ID is correct
         val newId = restored.getIdForName("minecraft:diamond")
         assertEquals(3, newId, "Next item ID should be correctly initialized")

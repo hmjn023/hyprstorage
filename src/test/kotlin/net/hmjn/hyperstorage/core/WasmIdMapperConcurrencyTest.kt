@@ -30,7 +30,7 @@ class WasmIdMapperConcurrencyTest {
 
         // Verify state
         assertEquals(itemNames.size, mapper.getItemMap().size, "Should have mapped all unique items")
-        
+
         // Ensure mapping is consistent
         val id1 = mapper.getIdForName("item_1")
         val id2 = mapper.getIdForName("item_1")
