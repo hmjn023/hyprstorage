@@ -1,6 +1,6 @@
 # Plan: ID Translation Layer (WasmIdManager)
 
-## Phase 1: Core Mapping Logic
+## Phase 1: Core Mapping Logic [checkpoint: bc4a4ff]
 - [x] Task: Create `WasmIdManagerTest.kt` with failing tests for basic item ID mapping (on-demand assignment). [d447ec2]
 - [x] Task: Implement basic item ID mapping in `WasmIdManager.kt` using `fastutil` maps. [d447ec2]
 - [x] Task: Create failing tests for NBT mapping (handling null tags and identical tags with same/different hashes). [3888842]
