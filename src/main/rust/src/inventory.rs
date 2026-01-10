@@ -7,6 +7,7 @@ static mut QUANTITIES: Vec<u64> = Vec::new();
 static mut LOCATION_IDS: Vec<u32> = Vec::new();
 
 pub fn init() {
+    log::info!("Inventory initialized in Wasm");
     unsafe {
         ITEM_IDS.clear();
         NBT_HASHES.clear();
