@@ -7,7 +7,7 @@
 - [x] Task: Implement NBT ID mapping logic in `WasmIdManager.kt` utilizing `ItemHashUtil`. [3888842]
 - [x] Task: Conductor - User Manual Verification 'Core Mapping Logic' (Protocol in workflow.md) [4f081d3]
 
-## Phase 2: Persistence (NBT-based Storage)
+## Phase 2: Persistence (NBT-based Storage) [checkpoint: 7651519]
 - [x] Task: Create unit tests for `save` and `load` functionality verifying data integrity after a cycle. [783278b]
 - [x] Task: Implement `save` method to serialize maps into a Minecraft `CompoundTag` and write to disk. [8a81c5b]
 - [x] Task: Implement `load` method to read the NBT file and populate the internal maps. [3126b01]
