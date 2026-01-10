@@ -2,15 +2,17 @@ package net.hmjn.hyperstorage.core
 
 import net.hmjn.hyperstorage.Hyperstorage
 import net.hmjn.hyperstorage.util.ItemHashUtil
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.level.LevelEvent
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.EventBusSubscriber
+import net.neoforged.neoforge.event.level.LevelEvent
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.storage.LevelResource
 import java.io.IOException
 import java.nio.file.Path
 
@@ -21,6 +23,7 @@ import java.nio.file.Path
 @EventBusSubscriber(modid = Hyperstorage.ID)
 object WasmIdManager {
     private val itemMapper = WasmIdMapper()
+    private val ID_MAP_FILE = "hyperstorage/id_map.dat"
 
     /**
      * Get a Wasm ID for the given item stack.
@@ -94,8 +97,11 @@ object WasmIdManager {
 
         try {
             val file = filePath.toFile()
-            file.parentFile.mkdirs()
+            if (file.parentFile != null) {
+                file.parentFile.mkdirs()
+            }
             NbtIo.writeCompressed(tag, filePath)
+            Hyperstorage.LOGGER.debug("Saved WasmIdManager mappings to $filePath")
         } catch (e: IOException) {
             Hyperstorage.LOGGER.error("Failed to save WasmIdManager mappings", e)
         }
@@ -128,7 +134,7 @@ object WasmIdManager {
             }
 
             itemMapper.loadData(itemMap, nbtMap)
-            Hyperstorage.LOGGER.info("WasmIdManager loaded ${itemMap.size} item IDs and ${nbtMap.size} NBT IDs.")
+            Hyperstorage.LOGGER.info("WasmIdManager loaded ${itemMap.size} item IDs and ${nbtMap.size} NBT IDs from $filePath")
         } catch (e: Exception) {
             Hyperstorage.LOGGER.error("Failed to load WasmIdManager mappings", e)
         }
@@ -143,13 +149,19 @@ object WasmIdManager {
 
     @SubscribeEvent
     fun onLevelSave(event: LevelEvent.Save) {
-        // Only save on the server side and for the overworld (to avoid redundant saves)
-        // Or better, save in a global directory.
-        // We will implement directory resolution in the next task.
+        val level = event.level
+        if (level is ServerLevel && level.dimension() == ServerLevel.OVERWORLD) {
+            val path = level.server.getWorldPath(LevelResource.ROOT).resolve(ID_MAP_FILE)
+            save(path)
+        }
     }
 
     @SubscribeEvent
     fun onLevelLoad(event: LevelEvent.Load) {
-        // Similar to save, load the global mapping.
+        val level = event.level
+        if (level is ServerLevel && level.dimension() == ServerLevel.OVERWORLD) {
+            val path = level.server.getWorldPath(LevelResource.ROOT).resolve(ID_MAP_FILE)
+            load(path)
+        }
     }
 }
