@@ -20,6 +20,6 @@
 - [x] Task: Conductor - User Manual Verification 'World Lifecycle Integration' (Protocol in workflow.md) [5b7547e]
 
 ## Phase 4: Concurrency and Refinement
-- [ ] Task: Add `ReadWriteLock` to `WasmIdManager` to ensure thread-safe access from multiple Wasm instances.
+- [x] Task: Add `ReadWriteLock` to `WasmIdManager` to ensure thread-safe access from multiple Wasm instances. [89e27a2]
 - [ ] Task: Verify thread safety with a concurrent stress test.
 - [ ] Task: Conductor - User Manual Verification 'Concurrency and Refinement' (Protocol in workflow.md)
