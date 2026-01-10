@@ -25,6 +25,15 @@ pub extern "C" fn init_logger() {
 }
 
 #[no_mangle]
+pub extern "C" fn test_all_log_levels() {
+    log::error!("Test Error");
+    log::warn!("Test Warn");
+    log::info!("Test Info");
+    log::debug!("Test Debug");
+    log::trace!("Test Trace");
+}
+
+#[no_mangle]
 pub extern "C" fn add_item(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
     inventory::add(item_id, nbt_hash, quantity, location_id)
 }
