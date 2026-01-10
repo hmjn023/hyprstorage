@@ -9,7 +9,7 @@
 
 ## Phase 2: Persistence (NBT-based Storage)
 - [x] Task: Create unit tests for `save` and `load` functionality verifying data integrity after a cycle. [783278b]
-- [ ] Task: Implement `save` method to serialize maps into a Minecraft `CompoundTag` and write to disk.
+- [x] Task: Implement `save` method to serialize maps into a Minecraft `CompoundTag` and write to disk. [8a81c5b]
 - [ ] Task: Implement `load` method to read the NBT file and populate the internal maps.
 - [ ] Task: Conductor - User Manual Verification 'Persistence' (Protocol in workflow.md)
 
