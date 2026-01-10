@@ -1,5 +1,6 @@
 package net.hmjn.hyperstorage.infrastructure.wasm
 
+import net.hmjn.hyperstorage.core.WasmBridge
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -8,6 +9,7 @@ class ChicoryWasmClientTest {
     @Test
     fun testAddFunction() {
         val client = ChicoryWasmClient()
+        client.addHostFunction(WasmBridge.createLogHostFunction())
 
         // Load the compiled wasm file from the rust target directory
         val wasmFile = File("src/main/rust/target/wasm32-unknown-unknown/release/hyper_visor_storage_wasm.wasm")

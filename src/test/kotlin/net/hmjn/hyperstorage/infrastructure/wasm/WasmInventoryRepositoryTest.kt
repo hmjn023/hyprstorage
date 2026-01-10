@@ -1,5 +1,6 @@
 package net.hmjn.hyperstorage.infrastructure.wasm
 
+import net.hmjn.hyperstorage.core.WasmBridge
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,6 +13,7 @@ class WasmInventoryRepositoryTest {
     @BeforeEach
     fun setup() {
         client = ChicoryWasmClient()
+        client.addHostFunction(WasmBridge.createLogHostFunction())
         val wasmFile = File("src/main/rust/target/wasm32-unknown-unknown/release/hyper_visor_storage_wasm.wasm")
         client.load(wasmFile.inputStream())
         client.callFunction("init_inventory")
