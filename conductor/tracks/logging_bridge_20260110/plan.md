@@ -17,7 +17,7 @@
 - [x] Task: Implement a global registration function in Rust to set the `WasmLogger`. [840bf87]
 - [x] Task: Update Kotlin `Hyperstorage.kt` to link the Wasm instance with the Kotlin log receiver upon startup. [b82e11c]
 - [x] Task: Create an integration test that triggers a Rust log and verifies its appearance in the Kotlin logs. [54b7296]
-- [ ] Task: Conductor - User Manual Verification 'Integration and Initialization' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Integration and Initialization' (Protocol in workflow.md) [e6dc16a]
 
 ## Phase 4: Validation and Refinement
 - [ ] Task: Verify all log levels (ERROR to TRACE) are correctly mapped and displayed.
