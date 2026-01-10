@@ -7,7 +7,7 @@
 - [x] Task: Conductor - User Manual Verification 'Kotlin-side Log Receiver' (Protocol in workflow.md) [34ebfb2]
 
 ## Phase 2: Rust-side Logger Core (log::Log Implementation)
-- [ ] Task: Define the FFI extern signatures for the Kotlin log callback in Rust.
+- [x] Task: Define the FFI extern signatures for the Kotlin log callback in Rust. [f3a5b6f]
 - [ ] Task: Implement the `log::Log` trait for a custom `WasmLogger` struct.
 - [ ] Task: Create unit tests (mocking FFI if possible) for `WasmLogger` metadata handling.
 - [ ] Task: Implement string passing logic (template + metadata) using the existing allocator.
