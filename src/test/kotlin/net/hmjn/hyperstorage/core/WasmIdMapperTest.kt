@@ -71,4 +71,26 @@ class WasmIdMapperTest {
         val mapper = WasmIdMapper()
         assertEquals(0, mapper.getNbtId(0L), "Null hash should map to ID 0")
     }
+
+    @Test
+    fun `should preserve data after save and load cycle`() {
+        val original = WasmIdMapper()
+        original.getIdForName("minecraft:iron_ingot")
+        original.getIdForName("minecraft:gold_ingot")
+        original.getNbtId(12345L)
+
+        val items = original.getItemMap()
+        val nbts = original.getNbtMap()
+
+        val restored = WasmIdMapper()
+        restored.loadData(items, nbts)
+
+        assertEquals(original.getIdForName("minecraft:iron_ingot"), restored.getIdForName("minecraft:iron_ingot"))
+        assertEquals(original.getNameForId(2), restored.getNameForId(2))
+        assertEquals(original.getNbtId(12345L), restored.getNbtId(12345L))
+        
+        // Ensure next ID is correct
+        val newId = restored.getIdForName("minecraft:diamond")
+        assertEquals(3, newId, "Next item ID should be correctly initialized")
+    }
 }

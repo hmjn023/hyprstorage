@@ -52,4 +52,27 @@ class WasmIdMapper {
         if (id == 0) return 0L
         return idToHash.get(id)
     }
+
+    // --- Persistence Support ---
+
+    @Synchronized
+    fun getItemMap(): Map<String, Int> = HashMap(stringToId)
+
+    @Synchronized
+    fun getNbtMap(): Map<Long, Int> = HashMap(hashToId)
+
+    @Synchronized
+    fun loadData(items: Map<String, Int>, nbts: Map<Long, Int>) {
+        stringToId.clear()
+        idToString.clear()
+        stringToId.putAll(items)
+        items.forEach { (name, id) -> idToString.put(id, name) }
+        nextItemId = (items.values.maxOrNull() ?: 0) + 1
+
+        hashToId.clear()
+        idToHash.clear()
+        hashToId.putAll(nbts)
+        nbts.forEach { (hash, id) -> idToHash.put(id, hash) }
+        nextNbtId = (nbts.values.maxOrNull() ?: 0) + 1
+    }
 }
