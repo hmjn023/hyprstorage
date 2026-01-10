@@ -15,7 +15,7 @@
 
 ## Phase 3: Integration and Initialization
 - [x] Task: Implement a global registration function in Rust to set the `WasmLogger`. [840bf87]
-- [ ] Task: Update Kotlin `Hyperstorage.kt` to link the Wasm instance with the Kotlin log receiver upon startup.
+- [x] Task: Update Kotlin `Hyperstorage.kt` to link the Wasm instance with the Kotlin log receiver upon startup. [b82e11c]
 - [ ] Task: Create an integration test that triggers a Rust log and verifies its appearance in the Kotlin logs.
 - [ ] Task: Conductor - User Manual Verification 'Integration and Initialization' (Protocol in workflow.md)
 
