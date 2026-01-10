@@ -1,8 +1,10 @@
 package net.hmjn.hyperstorage.infrastructure
 
 import net.hmjn.hyperstorage.Hyperstorage
+import net.hmjn.hyperstorage.core.WasmBridge
 import net.hmjn.hyperstorage.domain.repository.InventoryRepository
 import net.hmjn.hyperstorage.domain.service.InventoryService
+import net.hmjn.hyperstorage.infrastructure.logging.Log4jLogReceiver
 import net.hmjn.hyperstorage.infrastructure.wasm.ChicoryWasmClient
 import net.hmjn.hyperstorage.infrastructure.wasm.WasmInventoryRepository
 import java.io.InputStream
@@ -15,11 +17,19 @@ object InventoryManager {
     private val repository: InventoryRepository = WasmInventoryRepository(wasmClient)
     private val service = InventoryService(repository)
 
+    init {
+        // Prepare WasmBridge with a Log4j receiver
+        WasmBridge.setLogReceiver(Log4jLogReceiver(Hyperstorage.LOGGER))
+        // Add the logging callback to the Wasm client
+        wasmClient.addHostFunction(WasmBridge.createLogHostFunction())
+    }
+
     fun loadWasm(wasmStream: InputStream) {
         try {
             wasmClient.load(wasmStream)
+            wasmClient.callFunction("init_logger")
             wasmClient.callFunction("init_inventory")
-            Hyperstorage.LOGGER.info("Wasm module loaded and inventory initialized via InventoryManager.")
+            Hyperstorage.LOGGER.info("Wasm module loaded, logger and inventory initialized via InventoryManager.")
         } catch (e: Exception) {
             Hyperstorage.LOGGER.error("Failed to load Wasm in InventoryManager", e)
         }
