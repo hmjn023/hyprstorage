@@ -70,20 +70,20 @@ class LoggingIntegrationTest {
         val mockLogger = mockk<Logger>(relaxed = true)
         val receiver = Log4jLogReceiver(mockLogger)
         WasmBridge.setLogReceiver(receiver)
-        
+
         val wasmFile = File("src/main/rust/target/wasm32-unknown-unknown/release/hyper_visor_storage_wasm.wasm")
-        if (!wasmFile.exists()) return 
+        if (!wasmFile.exists()) return
 
         val client = net.hmjn.hyperstorage.infrastructure.wasm.ChicoryWasmClient()
         client.addHostFunction(WasmBridge.createLogHostFunction())
         client.load(wasmFile.inputStream())
         client.callFunction("init_logger")
-        
+
         // Log 1000 messages
         client.callFunction("stress_test_log", 1000L)
-        
+
         // Verify last message to ensure all were processed
-        verify(exactly = 1000) { 
+        verify(exactly = 1000) {
             mockLogger.log(Level.INFO, match<String> { it.contains("Stress test message #") })
         }
     }

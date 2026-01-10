@@ -38,7 +38,7 @@ object WasmBridge {
                 // msg_ptr
                 ValueType.I32,
                 // msg_len
-                ValueType.I32
+                ValueType.I32,
             ),
             listOf(),
         ) { instance, args ->

@@ -27,3 +27,4 @@
 - **Modular Rust Core:** API, Inventory, Allocatorモジュールに分割し、責務を明確化。
 - **Structure-of-Arrays (SoA):** Rust側でのメモリ効率とキャッシュヒット率を最大化するためのデータ構造。
 - **ID Translation Layer:** String (RegistryName) と u32 (WasmID) の高速変換。
+- **FFI Logging Bridge:** Wasm (Rust) の `log` クレートをホスト (Kotlin/Log4j) に接続。Wasm内部の可視化を実現。
