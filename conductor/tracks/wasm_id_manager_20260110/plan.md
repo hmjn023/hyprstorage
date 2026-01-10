@@ -11,7 +11,7 @@
 - [x] Task: Create unit tests for `save` and `load` functionality verifying data integrity after a cycle. [783278b]
 - [x] Task: Implement `save` method to serialize maps into a Minecraft `CompoundTag` and write to disk. [8a81c5b]
 - [x] Task: Implement `load` method to read the NBT file and populate the internal maps. [3126b01]
-- [ ] Task: Conductor - User Manual Verification 'Persistence' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Persistence' (Protocol in workflow.md) [67a3323]
 
 ## Phase 3: World Lifecycle Integration
 - [ ] Task: Create integration tests simulating world load/save events to ensure `WasmIdManager` state is preserved.
