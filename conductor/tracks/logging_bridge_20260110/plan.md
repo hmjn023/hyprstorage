@@ -6,7 +6,7 @@
 - [x] Task: Add the log callback function to `WasmBridge` (FFI Export). [ec099fd]
 - [x] Task: Conductor - User Manual Verification 'Kotlin-side Log Receiver' (Protocol in workflow.md) [34ebfb2]
 
-## Phase 2: Rust-side Logger Core (log::Log Implementation)
+## Phase 2: Rust-side Logger Core (log::Log Implementation) [checkpoint: 8b58cdc]
 - [x] Task: Define the FFI extern signatures for the Kotlin log callback in Rust. [f3a5b6f]
 - [x] Task: Implement the `log::Log` trait for a custom `WasmLogger` struct. [4ab2e02]
 - [x] Task: Create unit tests (mocking FFI if possible) for `WasmLogger` metadata handling. [af0d744]
