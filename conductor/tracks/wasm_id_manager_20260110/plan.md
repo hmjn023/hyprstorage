@@ -19,7 +19,7 @@
 - [x] Task: Implement directory resolution to ensure `id_map.dat` is stored in the correct world sub-directory. [2d2d61d]
 - [x] Task: Conductor - User Manual Verification 'World Lifecycle Integration' (Protocol in workflow.md) [5b7547e]
 
-## Phase 4: Concurrency and Refinement
+## Phase 4: Concurrency and Refinement [checkpoint: 461e085]
 - [x] Task: Add `ReadWriteLock` to `WasmIdManager` to ensure thread-safe access from multiple Wasm instances. [89e27a2]
 - [x] Task: Verify thread safety with a concurrent stress test. [82da4f5]
 - [x] Task: Conductor - User Manual Verification 'Concurrency and Refinement' (Protocol in workflow.md) [6c9126e]
