@@ -16,7 +16,7 @@
 ## Phase 3: World Lifecycle Integration
 - [x] Task: Create integration tests simulating world load/save events to ensure `WasmIdManager` state is preserved. [d447ec2]
 - [x] Task: Register NeoForge event listeners (`LevelEvent.Load`, `LevelEvent.Save`) to trigger manager's persistence methods. [3ed2e39]
-- [ ] Task: Implement directory resolution to ensure `id_map.dat` is stored in the correct world sub-directory.
+- [x] Task: Implement directory resolution to ensure `id_map.dat` is stored in the correct world sub-directory. [2d2d61d]
 - [ ] Task: Conductor - User Manual Verification 'World Lifecycle Integration' (Protocol in workflow.md)
 
 ## Phase 4: Concurrency and Refinement
