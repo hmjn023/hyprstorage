@@ -1,9 +1,10 @@
 package net.hmjn.hyperstorage.core
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.hmjn.hyperstorage.Hyperstorage
 import net.hmjn.hyperstorage.util.ItemHashUtil
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.EventBusSubscriber
+import net.neoforged.neoforge.event.level.LevelEvent
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtAccounter
@@ -17,6 +18,7 @@ import java.nio.file.Path
  * Global entry point for ID translation.
  * Delegates core mapping logic to WasmIdMapper.
  */
+@EventBusSubscriber(modid = Hyperstorage.ID)
 object WasmIdManager {
     private val itemMapper = WasmIdMapper()
 
@@ -91,6 +93,8 @@ object WasmIdManager {
         tag.put("Nbts", nbtsTag)
 
         try {
+            val file = filePath.toFile()
+            file.parentFile.mkdirs()
             NbtIo.writeCompressed(tag, filePath)
         } catch (e: IOException) {
             Hyperstorage.LOGGER.error("Failed to save WasmIdManager mappings", e)
@@ -102,7 +106,10 @@ object WasmIdManager {
      */
     fun load(filePath: Path) {
         val file = filePath.toFile()
-        if (!file.exists()) return
+        if (!file.exists()) {
+            resetForTesting() // Ensure clean state if no file
+            return
+        }
 
         try {
             val tag = NbtIo.readCompressed(filePath, NbtAccounter.unlimitedHeap()) ?: return
@@ -125,5 +132,24 @@ object WasmIdManager {
         } catch (e: Exception) {
             Hyperstorage.LOGGER.error("Failed to load WasmIdManager mappings", e)
         }
+    }
+
+    /**
+     * Reset the internal state. Used for testing and world changes.
+     */
+    fun resetForTesting() {
+        itemMapper.reset()
+    }
+
+    @SubscribeEvent
+    fun onLevelSave(event: LevelEvent.Save) {
+        // Only save on the server side and for the overworld (to avoid redundant saves)
+        // Or better, save in a global directory.
+        // We will implement directory resolution in the next task.
+    }
+
+    @SubscribeEvent
+    fun onLevelLoad(event: LevelEvent.Load) {
+        // Similar to save, load the global mapping.
     }
 }
