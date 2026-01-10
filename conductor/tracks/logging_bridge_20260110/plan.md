@@ -13,7 +13,7 @@
 - [x] Task: Implement string passing logic (template + metadata) using the existing allocator. [4ab2e02]
 - [x] Task: Conductor - User Manual Verification 'Rust-side Logger Core' (Protocol in workflow.md) [2cd2322]
 
-## Phase 3: Integration and Initialization
+## Phase 3: Integration and Initialization [checkpoint: 132c5af]
 - [x] Task: Implement a global registration function in Rust to set the `WasmLogger`. [840bf87]
 - [x] Task: Update Kotlin `Hyperstorage.kt` to link the Wasm instance with the Kotlin log receiver upon startup. [b82e11c]
 - [x] Task: Create an integration test that triggers a Rust log and verifies its appearance in the Kotlin logs. [54b7296]
