@@ -1,0 +1,25 @@
+# Plan: ID Translation Layer (WasmIdManager)
+
+## Phase 1: Core Mapping Logic
+- [ ] Task: Create `WasmIdManagerTest.kt` with failing tests for basic item ID mapping (on-demand assignment).
+- [ ] Task: Implement basic item ID mapping in `WasmIdManager.kt` using `fastutil` maps.
+- [ ] Task: Create failing tests for NBT mapping (handling null tags and identical tags with same/different hashes).
+- [ ] Task: Implement NBT ID mapping logic in `WasmIdManager.kt` utilizing `ItemHashUtil`.
+- [ ] Task: Conductor - User Manual Verification 'Core Mapping Logic' (Protocol in workflow.md)
+
+## Phase 2: Persistence (NBT-based Storage)
+- [ ] Task: Create unit tests for `save` and `load` functionality verifying data integrity after a cycle.
+- [ ] Task: Implement `save` method to serialize maps into a Minecraft `CompoundTag` and write to disk.
+- [ ] Task: Implement `load` method to read the NBT file and populate the internal maps.
+- [ ] Task: Conductor - User Manual Verification 'Persistence' (Protocol in workflow.md)
+
+## Phase 3: World Lifecycle Integration
+- [ ] Task: Create integration tests simulating world load/save events to ensure `WasmIdManager` state is preserved.
+- [ ] Task: Register NeoForge event listeners (`LevelEvent.Load`, `LevelEvent.Save`) to trigger manager's persistence methods.
+- [ ] Task: Implement directory resolution to ensure `id_map.dat` is stored in the correct world sub-directory.
+- [ ] Task: Conductor - User Manual Verification 'World Lifecycle Integration' (Protocol in workflow.md)
+
+## Phase 4: Concurrency and Refinement
+- [ ] Task: Add `ReadWriteLock` to `WasmIdManager` to ensure thread-safe access from multiple Wasm instances.
+- [ ] Task: Verify thread safety with a concurrent stress test.
+- [ ] Task: Conductor - User Manual Verification 'Concurrency and Refinement' (Protocol in workflow.md)
