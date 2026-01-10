@@ -19,7 +19,7 @@
 - [x] Task: Create an integration test that triggers a Rust log and verifies its appearance in the Kotlin logs. [54b7296]
 - [x] Task: Conductor - User Manual Verification 'Integration and Initialization' (Protocol in workflow.md) [e6dc16a]
 
-## Phase 4: Validation and Refinement
+## Phase 4: Validation and Refinement [checkpoint: 7d32308]
 - [x] Task: Verify all log levels (ERROR to TRACE) are correctly mapped and displayed. [2f239ee]
 - [x] Task: Verify that file name and line numbers are correctly included in the logs. [2f239ee]
 - [x] Task: Perform a "stress test" by logging 1000+ messages in a single tick to ensure no memory leaks or crashes. [8b314ed]
