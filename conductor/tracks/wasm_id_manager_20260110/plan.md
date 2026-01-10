@@ -3,8 +3,8 @@
 ## Phase 1: Core Mapping Logic
 - [x] Task: Create `WasmIdManagerTest.kt` with failing tests for basic item ID mapping (on-demand assignment). [d447ec2]
 - [x] Task: Implement basic item ID mapping in `WasmIdManager.kt` using `fastutil` maps. [d447ec2]
-- [ ] Task: Create failing tests for NBT mapping (handling null tags and identical tags with same/different hashes).
-- [ ] Task: Implement NBT ID mapping logic in `WasmIdManager.kt` utilizing `ItemHashUtil`.
+- [x] Task: Create failing tests for NBT mapping (handling null tags and identical tags with same/different hashes). [3888842]
+- [x] Task: Implement NBT ID mapping logic in `WasmIdManager.kt` utilizing `ItemHashUtil`. [3888842]
 - [ ] Task: Conductor - User Manual Verification 'Core Mapping Logic' (Protocol in workflow.md)
 
 ## Phase 2: Persistence (NBT-based Storage)
