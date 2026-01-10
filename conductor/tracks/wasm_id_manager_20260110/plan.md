@@ -13,7 +13,7 @@
 - [x] Task: Implement `load` method to read the NBT file and populate the internal maps. [3126b01]
 - [x] Task: Conductor - User Manual Verification 'Persistence' (Protocol in workflow.md) [67a3323]
 
-## Phase 3: World Lifecycle Integration
+## Phase 3: World Lifecycle Integration [checkpoint: 3af9b5d]
 - [x] Task: Create integration tests simulating world load/save events to ensure `WasmIdManager` state is preserved. [d447ec2]
 - [x] Task: Register NeoForge event listeners (`LevelEvent.Load`, `LevelEvent.Save`) to trigger manager's persistence methods. [3ed2e39]
 - [x] Task: Implement directory resolution to ensure `id_map.dat` is stored in the correct world sub-directory. [2d2d61d]
