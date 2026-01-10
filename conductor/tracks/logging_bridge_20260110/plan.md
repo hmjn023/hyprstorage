@@ -3,7 +3,7 @@
 ## Phase 1: Kotlin-side Log Receiver (Infrastructure)
 - [x] Task: Define `LogReceiver` interface and a Log4j-based implementation in Kotlin. [21ae2b6]
 - [x] Task: Create unit tests for `LogReceiver` level mapping. [21ae2b6]
-- [ ] Task: Add the log callback function to `WasmBridge` (FFI Export).
+- [x] Task: Add the log callback function to `WasmBridge` (FFI Export). [ec099fd]
 - [ ] Task: Conductor - User Manual Verification 'Kotlin-side Log Receiver' (Protocol in workflow.md)
 
 ## Phase 2: Rust-side Logger Core (log::Log Implementation)
