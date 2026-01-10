@@ -20,7 +20,7 @@
 - [x] Task: Conductor - User Manual Verification 'Integration and Initialization' (Protocol in workflow.md) [e6dc16a]
 
 ## Phase 4: Validation and Refinement
-- [ ] Task: Verify all log levels (ERROR to TRACE) are correctly mapped and displayed.
-- [ ] Task: Verify that file name and line numbers are correctly included in the logs.
+- [x] Task: Verify all log levels (ERROR to TRACE) are correctly mapped and displayed. [2f239ee]
+- [x] Task: Verify that file name and line numbers are correctly included in the logs. [2f239ee]
 - [ ] Task: Perform a "stress test" by logging 1000+ messages in a single tick to ensure no memory leaks or crashes.
 - [ ] Task: Conductor - User Manual Verification 'Validation and Refinement' (Protocol in workflow.md)
