@@ -17,7 +17,7 @@
 - [x] Task: Create integration tests simulating world load/save events to ensure `WasmIdManager` state is preserved. [d447ec2]
 - [x] Task: Register NeoForge event listeners (`LevelEvent.Load`, `LevelEvent.Save`) to trigger manager's persistence methods. [3ed2e39]
 - [x] Task: Implement directory resolution to ensure `id_map.dat` is stored in the correct world sub-directory. [2d2d61d]
-- [ ] Task: Conductor - User Manual Verification 'World Lifecycle Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'World Lifecycle Integration' (Protocol in workflow.md) [5b7547e]
 
 ## Phase 4: Concurrency and Refinement
 - [ ] Task: Add `ReadWriteLock` to `WasmIdManager` to ensure thread-safe access from multiple Wasm instances.
