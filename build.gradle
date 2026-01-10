@@ -115,6 +115,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'io.mockk:mockk:1.13.10'
     testImplementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    testImplementation 'it.unimi.dsi:fastutil:8.5.12'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

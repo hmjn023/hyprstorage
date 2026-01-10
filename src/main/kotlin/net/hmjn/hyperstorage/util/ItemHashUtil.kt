@@ -8,7 +8,7 @@ import java.security.MessageDigest
 object ItemHashUtil {
     fun getItemId(stack: ItemStack): Int {
         // Use the centralized ID manager for safe, collision-free IDs
-        return WasmIdManager.getId(stack)
+        return WasmIdManager.getItemId(stack)
     }
 
     /** Calculate a deterministic hash for item data Returns 0 if no custom data */

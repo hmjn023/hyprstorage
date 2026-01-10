@@ -1,42 +1,43 @@
 package net.hmjn.hyperstorage.core
 
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 
 /**
- * Manages the mapping between Matrix Item Registry Names (String) and Wasm IDs (Int). Ensures
- * collision-free IDs for Wasm processing.
- *
- * TODO: Implement save/load logic to persist ID mappings across server restarts.
+ * Global entry point for ID translation.
+ * Delegates core mapping logic to WasmIdMapper.
  */
 object WasmIdManager {
-    private val idToName = ArrayList<String>()
-    private val nameToId = HashMap<String, Int>()
+    private val itemMapper = WasmIdMapper()
 
     /**
-     * Get a deterministic Wasm ID for the given item stack. Assigns a new ID if one doesn't exist.
+     * Get a Wasm ID for the given item stack.
      */
-    fun getId(stack: ItemStack): Int {
+    fun getItemId(stack: ItemStack): Int {
         if (stack.isEmpty) return 0
-
-        val registryName = BuiltInRegistries.ITEM.getKey(stack.item).toString()
-        return getIdForName(registryName)
+        val res = BuiltInRegistries.ITEM.getKey(stack.item)
+        return getItemId(res)
     }
 
-    /** Get ID for a registry name string. */
-    @Synchronized
-    fun getIdForName(name: String): Int {
-        return nameToId.computeIfAbsent(name) {
-            val newId = idToName.size + 1 // Start IDs at 1 (0 is empty/null)
-            idToName.add(name)
-            newId
-        }
+    /**
+     * Get a Wasm ID for the given registry name.
+     */
+    fun getItemId(res: ResourceLocation): Int {
+        return itemMapper.getIdForName(res.toString())
     }
 
-    /** Get the registry name associated with a Wasm ID. */
-    @Synchronized
+    /**
+     * Get the registry name associated with a Wasm ID.
+     */
     fun getName(id: Int): String? {
-        if (id <= 0 || id > idToName.size) return null
-        return idToName[id - 1]
+        return itemMapper.getNameForId(id)
+    }
+
+    /**
+     * Get ID for a registry name string directly.
+     */
+    fun getIdForName(name: String): Int {
+        return itemMapper.getIdForName(name)
     }
 }
