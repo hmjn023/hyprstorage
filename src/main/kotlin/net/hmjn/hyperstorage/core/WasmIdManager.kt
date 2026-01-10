@@ -1,9 +1,12 @@
 package net.hmjn.hyperstorage.core
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.hmjn.hyperstorage.Hyperstorage
 import net.hmjn.hyperstorage.util.ItemHashUtil
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
@@ -91,6 +94,36 @@ object WasmIdManager {
             NbtIo.writeCompressed(tag, filePath)
         } catch (e: IOException) {
             Hyperstorage.LOGGER.error("Failed to save WasmIdManager mappings", e)
+        }
+    }
+
+    /**
+     * Load the ID mappings from a file.
+     */
+    fun load(filePath: Path) {
+        val file = filePath.toFile()
+        if (!file.exists()) return
+
+        try {
+            val tag = NbtIo.readCompressed(filePath, NbtAccounter.unlimitedHeap()) ?: return
+            
+            val itemMap = mutableMapOf<String, Int>()
+            val itemsTag = tag.getCompound("Items")
+            for (key in itemsTag.allKeys) {
+                itemMap[key] = itemsTag.getInt(key)
+            }
+
+            val nbtMap = mutableMapOf<Long, Int>()
+            val nbtsTag = tag.getCompound("Nbts")
+            for (key in nbtsTag.allKeys) {
+                val hash = key.toLongOrNull() ?: continue
+                nbtMap[hash] = nbtsTag.getInt(key)
+            }
+
+            itemMapper.loadData(itemMap, nbtMap)
+            Hyperstorage.LOGGER.info("WasmIdManager loaded ${itemMap.size} item IDs and ${nbtMap.size} NBT IDs.")
+        } catch (e: Exception) {
+            Hyperstorage.LOGGER.error("Failed to load WasmIdManager mappings", e)
         }
     }
 }
