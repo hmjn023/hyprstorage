@@ -1,9 +1,14 @@
 package net.hmjn.hyperstorage.core
 
+import net.hmjn.hyperstorage.Hyperstorage
 import net.hmjn.hyperstorage.util.ItemHashUtil
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
+import java.io.IOException
+import java.nio.file.Path
 
 /**
  * Global entry point for ID translation.
@@ -62,5 +67,30 @@ object WasmIdManager {
      */
     fun getNbtHash(id: Int): Long {
         return itemMapper.getHashForNbtId(id)
+    }
+
+    /**
+     * Save the ID mappings to a file.
+     */
+    fun save(filePath: Path) {
+        val tag = CompoundTag()
+        
+        val itemsTag = CompoundTag()
+        itemMapper.getItemMap().forEach { (name, id) ->
+            itemsTag.putInt(name, id)
+        }
+        tag.put("Items", itemsTag)
+
+        val nbtsTag = CompoundTag()
+        itemMapper.getNbtMap().forEach { (hash, id) ->
+            nbtsTag.putInt(hash.toString(), id)
+        }
+        tag.put("Nbts", nbtsTag)
+
+        try {
+            NbtIo.writeCompressed(tag, filePath)
+        } catch (e: IOException) {
+            Hyperstorage.LOGGER.error("Failed to save WasmIdManager mappings", e)
+        }
     }
 }
