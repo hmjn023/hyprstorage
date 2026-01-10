@@ -14,7 +14,7 @@
 - [x] Task: Conductor - User Manual Verification 'Rust-side Logger Core' (Protocol in workflow.md) [2cd2322]
 
 ## Phase 3: Integration and Initialization
-- [ ] Task: Implement a global registration function in Rust to set the `WasmLogger`.
+- [x] Task: Implement a global registration function in Rust to set the `WasmLogger`. [840bf87]
 - [ ] Task: Update Kotlin `Hyperstorage.kt` to link the Wasm instance with the Kotlin log receiver upon startup.
 - [ ] Task: Create an integration test that triggers a Rust log and verifies its appearance in the Kotlin logs.
 - [ ] Task: Conductor - User Manual Verification 'Integration and Initialization' (Protocol in workflow.md)
