@@ -5,7 +5,7 @@
 - [x] Task: Implement basic item ID mapping in `WasmIdManager.kt` using `fastutil` maps. [d447ec2]
 - [x] Task: Create failing tests for NBT mapping (handling null tags and identical tags with same/different hashes). [3888842]
 - [x] Task: Implement NBT ID mapping logic in `WasmIdManager.kt` utilizing `ItemHashUtil`. [3888842]
-- [ ] Task: Conductor - User Manual Verification 'Core Mapping Logic' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Core Mapping Logic' (Protocol in workflow.md) [4f081d3]
 
 ## Phase 2: Persistence (NBT-based Storage)
 - [ ] Task: Create unit tests for `save` and `load` functionality verifying data integrity after a cycle.
