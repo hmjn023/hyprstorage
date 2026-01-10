@@ -4,7 +4,7 @@
 - [x] Task: Define `LogReceiver` interface and a Log4j-based implementation in Kotlin. [21ae2b6]
 - [x] Task: Create unit tests for `LogReceiver` level mapping. [21ae2b6]
 - [x] Task: Add the log callback function to `WasmBridge` (FFI Export). [ec099fd]
-- [ ] Task: Conductor - User Manual Verification 'Kotlin-side Log Receiver' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Kotlin-side Log Receiver' (Protocol in workflow.md) [34ebfb2]
 
 ## Phase 2: Rust-side Logger Core (log::Log Implementation)
 - [ ] Task: Define the FFI extern signatures for the Kotlin log callback in Rust.
