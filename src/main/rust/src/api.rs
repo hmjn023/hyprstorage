@@ -34,6 +34,13 @@ pub extern "C" fn test_all_log_levels() {
 }
 
 #[no_mangle]
+pub extern "C" fn stress_test_log(count: i32) {
+    for i in 0..count {
+        log::info!("Stress test message #{}", i);
+    }
+}
+
+#[no_mangle]
 pub extern "C" fn add_item(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
     inventory::add(item_id, nbt_hash, quantity, location_id)
 }
