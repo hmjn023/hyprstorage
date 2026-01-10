@@ -8,7 +8,7 @@
 - [x] Task: Conductor - User Manual Verification 'Core Mapping Logic' (Protocol in workflow.md) [4f081d3]
 
 ## Phase 2: Persistence (NBT-based Storage)
-- [ ] Task: Create unit tests for `save` and `load` functionality verifying data integrity after a cycle.
+- [x] Task: Create unit tests for `save` and `load` functionality verifying data integrity after a cycle. [783278b]
 - [ ] Task: Implement `save` method to serialize maps into a Minecraft `CompoundTag` and write to disk.
 - [ ] Task: Implement `load` method to read the NBT file and populate the internal maps.
 - [ ] Task: Conductor - User Manual Verification 'Persistence' (Protocol in workflow.md)
