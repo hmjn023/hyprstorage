@@ -1,5 +1,7 @@
 package net.hmjn.hyperstorage.infrastructure.wasm
 
+import com.dylibso.chicory.runtime.HostFunction
+import com.dylibso.chicory.runtime.ImportValues
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.Parser
 import java.io.InputStream
@@ -9,14 +11,33 @@ import java.io.InputStream
  */
 class ChicoryWasmClient {
     private var instance: Instance? = null
+    private val hostFunctions = mutableListOf<HostFunction>()
+
+    /**
+     * Adds a host function to be registered when the module is loaded.
+     */
+    fun addHostFunction(hostFunction: HostFunction) {
+        hostFunctions.add(hostFunction)
+    }
 
     /**
      * Loads the Wasm module from the given stream.
      */
     fun load(inputStream: InputStream) {
         val module = Parser.parse(inputStream)
-        instance = Instance.builder(module).build()
+        val imports = ImportValues.builder()
+        hostFunctions.forEach { imports.addFunction(it) }
+
+        instance =
+            Instance.builder(module)
+                .withImportValues(imports.build())
+                .build()
     }
+
+    /**
+     * Returns the memory of the current instance.
+     */
+    fun getMemory() = instance?.memory()
 
     /**
      * Calls a Wasm function with the given name and arguments.
