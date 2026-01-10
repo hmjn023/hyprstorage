@@ -1,6 +1,6 @@
 # Plan: Rust-Kotlin Logging Bridge
 
-## Phase 1: Kotlin-side Log Receiver (Infrastructure)
+## Phase 1: Kotlin-side Log Receiver (Infrastructure) [checkpoint: dfa1b3a]
 - [x] Task: Define `LogReceiver` interface and a Log4j-based implementation in Kotlin. [21ae2b6]
 - [x] Task: Create unit tests for `LogReceiver` level mapping. [21ae2b6]
 - [x] Task: Add the log callback function to `WasmBridge` (FFI Export). [ec099fd]
