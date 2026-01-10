@@ -9,7 +9,7 @@
 ## Phase 2: Rust-side Logger Core (log::Log Implementation)
 - [x] Task: Define the FFI extern signatures for the Kotlin log callback in Rust. [f3a5b6f]
 - [x] Task: Implement the `log::Log` trait for a custom `WasmLogger` struct. [4ab2e02]
-- [ ] Task: Create unit tests (mocking FFI if possible) for `WasmLogger` metadata handling.
+- [x] Task: Create unit tests (mocking FFI if possible) for `WasmLogger` metadata handling. [af0d744]
 - [x] Task: Implement string passing logic (template + metadata) using the existing allocator. [4ab2e02]
 - [ ] Task: Conductor - User Manual Verification 'Rust-side Logger Core' (Protocol in workflow.md)
 
