@@ -49,3 +49,45 @@ impl Log for WasmLogger {
 
     fn flush(&self) {}
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use log::{Level, Record};
+
+    // Mock the external function for tests
+    #[no_mangle]
+    extern "C" fn wasm_log(
+        level: i32,
+        _file_ptr: *const u8,
+        _file_len: i32,
+        _line: i32,
+        _msg_ptr: *const u8,
+        _msg_len: i32,
+    ) {
+        // We can capture calls here if needed for more advanced tests
+        assert!(level >= 1 && level <= 5);
+    }
+
+    #[test]
+    fn test_logger_enabled() {
+        let logger = WasmLogger;
+        let metadata = log::Metadata::builder().level(Level::Info).build();
+        assert!(logger.enabled(&metadata));
+    }
+
+    #[test]
+    fn test_log_call() {
+        let logger = WasmLogger;
+        let record = Record::builder()
+            .args(format_args!("test message"))
+            .level(Level::Error)
+            .target("my_mod")
+            .file(Some("mod.rs"))
+            .line(Some(123))
+            .build();
+
+        // This will call our mock wasm_log
+        logger.log(&record);
+    }
+}
