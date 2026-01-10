@@ -1,5 +1,6 @@
 package net.hmjn.hyperstorage.core
 
+import net.hmjn.hyperstorage.util.ItemHashUtil
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
@@ -17,7 +18,7 @@ object WasmIdManager {
     fun getItemId(stack: ItemStack): Int {
         if (stack.isEmpty) return 0
         val res = BuiltInRegistries.ITEM.getKey(stack.item)
-        return getItemId(res)
+        return getIdForName(res.toString())
     }
 
     /**
@@ -39,5 +40,27 @@ object WasmIdManager {
      */
     fun getIdForName(name: String): Int {
         return itemMapper.getIdForName(name)
+    }
+
+    /**
+     * Get an NBT ID for the given stack's data components.
+     */
+    fun getNbtId(stack: ItemStack): Int {
+        val hash = ItemHashUtil.getNbtHash(stack)
+        return getNbtId(hash)
+    }
+
+    /**
+     * Get an NBT ID for a pre-calculated hash.
+     */
+    fun getNbtId(hash: Long): Int {
+        return itemMapper.getNbtId(hash)
+    }
+
+    /**
+     * Get the hash associated with an NBT ID.
+     */
+    fun getNbtHash(id: Int): Long {
+        return itemMapper.getHashForNbtId(id)
     }
 }

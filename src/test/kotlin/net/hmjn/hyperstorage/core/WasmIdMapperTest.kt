@@ -23,7 +23,7 @@ class WasmIdMapperTest {
     fun `should return same ID for same item`() {
         val mapper = WasmIdMapper()
         val ironIngot = "minecraft:iron_ingot"
-        
+
         val id1 = mapper.getIdForName(ironIngot)
         val id2 = mapper.getIdForName(ironIngot)
 
@@ -34,10 +34,41 @@ class WasmIdMapperTest {
     fun `should reverse map ID to name`() {
         val mapper = WasmIdMapper()
         val ironIngotName = "minecraft:iron_ingot"
-        
+
         val id = mapper.getIdForName(ironIngotName)
         val name = mapper.getNameForId(id)
 
         assertEquals(ironIngotName, name, "Should be able to get name from ID")
+    }
+
+    @Test
+    fun `should assign NBT IDs based on hashes`() {
+        val mapper = WasmIdMapper()
+        val hash1 = 12345L
+        val hash2 = 67890L
+
+        val id1 = mapper.getNbtId(hash1)
+        val id2 = mapper.getNbtId(hash2)
+
+        assertNotEquals(0, id1, "NBT ID should not be 0 for non-zero hash")
+        assertNotEquals(0, id2, "NBT ID should not be 0 for non-zero hash")
+        assertNotEquals(id1, id2, "Different hashes should have different NBT IDs")
+    }
+
+    @Test
+    fun `should return same NBT ID for same hash`() {
+        val mapper = WasmIdMapper()
+        val hash = 12345L
+
+        val id1 = mapper.getNbtId(hash)
+        val id2 = mapper.getNbtId(hash)
+
+        assertEquals(id1, id2, "Same hash should have same NBT ID")
+    }
+
+    @Test
+    fun `should return 0 for null hash`() {
+        val mapper = WasmIdMapper()
+        assertEquals(0, mapper.getNbtId(0L), "Null hash should map to ID 0")
     }
 }
