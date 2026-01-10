@@ -14,6 +14,16 @@ extern "C" {
 
 pub struct WasmLogger;
 
+static LOGGER: WasmLogger = WasmLogger;
+
+pub fn init() {
+    log::set_logger(&LOGGER)
+        .map(|()| log::set_max_level(log::LevelFilter::Trace))
+        .unwrap_or_else(|_e| {
+            // If logger already set, we just ignore it for now
+        });
+}
+
 impl Log for WasmLogger {
     fn enabled(&self, _metadata: &Metadata) -> bool {
         // We enable all logs for now, filtering can be done on the host side

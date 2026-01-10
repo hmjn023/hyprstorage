@@ -20,6 +20,11 @@ pub extern "C" fn init_inventory() {
 }
 
 #[no_mangle]
+pub extern "C" fn init_logger() {
+    crate::logger::init()
+}
+
+#[no_mangle]
 pub extern "C" fn add_item(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
     inventory::add(item_id, nbt_hash, quantity, location_id)
 }
