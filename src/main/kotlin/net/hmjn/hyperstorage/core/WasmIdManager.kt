@@ -10,8 +10,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.storage.LevelResource
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.event.level.LevelEvent
 import java.io.IOException
 import java.nio.file.Path
@@ -20,7 +18,6 @@ import java.nio.file.Path
  * Global entry point for ID translation.
  * Delegates core mapping logic to WasmIdMapper.
  */
-@EventBusSubscriber(modid = Hyperstorage.ID)
 object WasmIdManager {
     private val itemMapper = WasmIdMapper()
     private val ID_MAP_FILE = "hyperstorage/id_map.dat"
@@ -147,8 +144,8 @@ object WasmIdManager {
         itemMapper.reset()
     }
 
-    @SubscribeEvent
-    fun onLevelSave(event: LevelEvent.Save) {
+    // Called manually via NeoForge.EVENT_BUS.addListener in Hyperstorage.kt
+    internal fun onLevelSave(event: LevelEvent.Save) {
         val level = event.level
         if (level is ServerLevel && level.dimension() == ServerLevel.OVERWORLD) {
             val path = level.server.getWorldPath(LevelResource.ROOT).resolve(ID_MAP_FILE)
@@ -156,8 +153,7 @@ object WasmIdManager {
         }
     }
 
-    @SubscribeEvent
-    fun onLevelLoad(event: LevelEvent.Load) {
+    internal fun onLevelLoad(event: LevelEvent.Load) {
         val level = event.level
         if (level is ServerLevel && level.dimension() == ServerLevel.OVERWORLD) {
             val path = level.server.getWorldPath(LevelResource.ROOT).resolve(ID_MAP_FILE)

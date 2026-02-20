@@ -1,13 +1,14 @@
 package net.hmjn.hyperstorage
 
 import net.hmjn.hyperstorage.block.ModBlocks
+import net.hmjn.hyperstorage.client.ClientSetup
+import net.hmjn.hyperstorage.core.WasmIdManager
 import net.minecraft.client.Minecraft
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
+import net.neoforged.neoforge.common.NeoForge
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -20,7 +21,6 @@ import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
  * An example for blocks is in the `blocks` package of this mod.
  */
 @Mod(Hyperstorage.ID)
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 object Hyperstorage {
     const val ID = "hyperstorage"
 
@@ -37,10 +37,20 @@ object Hyperstorage {
         net.hmjn.hyperstorage.creativetab.ModCreativeTabs.REGISTRY.register(MOD_BUS)
         net.hmjn.hyperstorage.menu.ModMenuTypes.REGISTRY.register(MOD_BUS)
 
+        // Register lifecycle events manually (avoids AutoKotlinEventBusSubscriber / Bindings bug)
+        MOD_BUS.addListener(::onCommonSetup)
+        MOD_BUS.addListener(::registerCapabilities)
+
+        // Register game-level events (FORGE bus) for WasmIdManager
+        NeoForge.EVENT_BUS.addListener(WasmIdManager::onLevelSave)
+        NeoForge.EVENT_BUS.addListener(WasmIdManager::onLevelLoad)
+
         val obj =
             runForDist(
                 clientTarget = {
                     MOD_BUS.addListener(::onClientSetup)
+                    // Register screen directly here so it fires before RegisterMenuScreensEvent
+                    MOD_BUS.addListener(ClientSetup::registerScreens)
                     Minecraft.getInstance()
                 },
                 serverTarget = {
@@ -65,8 +75,7 @@ object Hyperstorage {
         LOGGER.log(Level.INFO, "Server starting...")
     }
 
-    @SubscribeEvent
-    fun onCommonSetup(event: FMLCommonSetupEvent) {
+    private fun onCommonSetup(event: FMLCommonSetupEvent) {
         LOGGER.log(Level.INFO, "Hello! This is working!")
 
         // Load Wasm via InventoryManager
@@ -87,8 +96,7 @@ object Hyperstorage {
         }
     }
 
-    @SubscribeEvent
-    fun registerCapabilities(event: net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent) {
+    private fun registerCapabilities(event: net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent) {
         event.registerBlockEntity(
             net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
             net.hmjn.hyperstorage.blockentity.ModBlockEntities.HYPER_STORAGE_BLOCK_ENTITY.get(),

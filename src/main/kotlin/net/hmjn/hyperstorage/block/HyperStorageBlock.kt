@@ -3,6 +3,7 @@ package net.hmjn.hyperstorage.block
 import net.hmjn.hyperstorage.blockentity.HyperStorageBlockEntity
 import net.hmjn.hyperstorage.blockentity.ModBlockEntities
 import net.minecraft.core.BlockPos
+import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
@@ -60,7 +61,7 @@ class HyperStorageBlock(properties: Properties) : Block(properties), EntityBlock
             val blockEntity = level.getBlockEntity(pos)
             if (blockEntity is HyperStorageBlockEntity) {
                 // Open the menu
-                player.openMenu(blockEntity, pos)
+                player.openMenu(blockEntity) { buf: FriendlyByteBuf -> buf.writeBlockPos(pos) }
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide)
