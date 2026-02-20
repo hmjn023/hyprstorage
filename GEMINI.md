@@ -49,6 +49,13 @@ cargo build --release --target wasm32-unknown-unknown
 - Kotlin/Java changes: Standard `./gradlew build` or IDE compilation
 - The build automatically triggers Rust compilation via the `buildRust` task
 
+## Documentation
+
+For detailed design and technical specifications, refer to:
+- **[Architecture Overview](./docs/architecture.md)**: Project philosophy, core tech stack, and design patterns.
+- **[Development Roadmap](./docs/roadmap.md)**: Current progress and future milestones.
+- **[Specifications](./)**: Detailed requirements, API specs, and data models.
+
 ## Architecture
 
 ### Hybrid Wasm Integration
