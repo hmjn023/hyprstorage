@@ -127,6 +127,25 @@ class HyperStorageScreen(menu: HyperStorageMenu, playerInventory: Inventory, tit
         renderTooltip(guiGraphics, mouseX, mouseY)
     }
 
+    override fun keyPressed(
+        keyCode: Int,
+        scanCode: Int,
+        modifiers: Int,
+    ): Boolean {
+        // 256 is the GLFW key code for ESCAPE. Allow closing the GUI if ESC is pressed.
+        if (keyCode == 256) {
+            return super.keyPressed(keyCode, scanCode, modifiers)
+        }
+
+        // If the textbox is focused, swallow all other key presses to prevent the game's
+        // default "E to close inventory" logic from shutting the GUI while typing.
+        if (nameBox.keyPressed(keyCode, scanCode, modifiers) || nameBox.isFocused) {
+            return true
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers)
+    }
+
     override fun renderBg(
         guiGraphics: GuiGraphics,
         partialTick: Float,
