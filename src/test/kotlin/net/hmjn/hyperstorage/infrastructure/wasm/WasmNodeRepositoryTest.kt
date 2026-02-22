@@ -37,4 +37,26 @@ class WasmNodeRepositoryTest {
         // Unregister node 1
         repository.unregisterNode(nodeId1)
     }
+
+    @Test
+    fun testTransportAndBuffer() {
+        val importerId = repository.registerNode(0, 0, 0, 0)
+        val exporterId = repository.registerNode(0, 1, 0, 1)
+
+        repository.pushSupply(importerId, 0L, 100L, 200L, 50L)
+        repository.tickTransport()
+
+        val buffer = repository.getTransferBuffer()
+        assertEquals(1, buffer.size)
+
+        val transfer = buffer[0]
+        assertEquals(importerId, transfer.sourceNodeId)
+        assertEquals(exporterId, transfer.targetNodeId)
+        assertEquals(100L, transfer.itemId)
+        assertEquals(200L, transfer.nbtHash)
+        assertEquals(50L, transfer.quantity)
+
+        val emptyBuffer = repository.getTransferBuffer()
+        assertEquals(0, emptyBuffer.size)
+    }
 }

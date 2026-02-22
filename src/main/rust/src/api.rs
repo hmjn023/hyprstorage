@@ -93,6 +93,36 @@ pub extern "C" fn set_node_active(node_id: u32, active: u8) {
 }
 
 #[no_mangle]
+pub extern "C" fn set_node_sleep(node_id: u32, ticks: u32, backoff_lvl: u8) {
+    crate::node::set_node_sleep(node_id, ticks, backoff_lvl)
+}
+
+#[no_mangle]
+pub extern "C" fn push_supply(source_node_id: u32, channel_id: u32, item_id: u32, nbt_hash: u64, quantity: u64) {
+    crate::transport::push_supply(source_node_id, channel_id, item_id, nbt_hash, quantity)
+}
+
+#[no_mangle]
+pub extern "C" fn tick_transport() {
+    crate::transport::tick_transport()
+}
+
+#[no_mangle]
+pub extern "C" fn get_transfer_buffer_size() -> usize {
+    crate::transport::get_transfer_buffer_size()
+}
+
+#[no_mangle]
+pub extern "C" fn get_transfer_buffer_ptr() -> *const crate::transport::TransferInstruction {
+    crate::transport::get_transfer_buffer_ptr()
+}
+
+#[no_mangle]
+pub extern "C" fn clear_transfer_buffer() {
+    crate::transport::clear_transfer_buffer()
+}
+
+#[no_mangle]
 pub extern "C" fn add(a: i32, b: i32) -> i32 {
     a + b
 }

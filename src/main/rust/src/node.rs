@@ -13,6 +13,8 @@ static mut Z_COORDS: Vec<i32> = Vec::new();
 // Node connection/channel properties
 static mut NODE_CHANNELS: Vec<u32> = Vec::new();
 static mut NODE_PRIORITIES: Vec<i8> = Vec::new();
+static mut NODE_SLEEP_TICKS: Vec<u32> = Vec::new(); // 0 means active
+static mut NODE_BACKOFF_LVL: Vec<u8> = Vec::new(); // level of exponential backoff
 
 pub fn init() {
     log::info!("Node manager initialized in Wasm");
@@ -26,6 +28,8 @@ pub fn init() {
         Z_COORDS.clear();
         NODE_CHANNELS.clear();
         NODE_PRIORITIES.clear();
+        NODE_SLEEP_TICKS.clear();
+        NODE_BACKOFF_LVL.clear();
     }
 }
 
@@ -43,6 +47,8 @@ pub fn register_node(x: i32, y: i32, z: i32, node_type: u8) -> u32 {
         // Default channel: 0, priority: 0
         NODE_CHANNELS.push(0);
         NODE_PRIORITIES.push(0);
+        NODE_SLEEP_TICKS.push(0);
+        NODE_BACKOFF_LVL.push(0);
         
         id
     }
@@ -60,6 +66,8 @@ pub fn unregister_node(node_id: u32) {
             Z_COORDS.remove(index);
             NODE_CHANNELS.remove(index);
             NODE_PRIORITIES.remove(index);
+            NODE_SLEEP_TICKS.remove(index);
+            NODE_BACKOFF_LVL.remove(index);
         }
     }
 }
@@ -75,6 +83,47 @@ pub fn set_node_active(node_id: u32, active: u8) {
 pub fn count_nodes() -> usize {
     unsafe {
         NODE_IDS.len()
+    }
+}
+
+pub fn set_node_sleep(node_id: u32, ticks: u32, backoff_lvl: u8) {
+    unsafe {
+        if let Some(index) = NODE_IDS.iter().position(|&id| id == node_id) {
+            NODE_SLEEP_TICKS[index] = ticks;
+            NODE_BACKOFF_LVL[index] = backoff_lvl;
+        }
+    }
+}
+
+pub fn decrement_sleep_ticks() {
+    unsafe {
+        for ticks in NODE_SLEEP_TICKS.iter_mut() {
+            if *ticks > 0 {
+                *ticks -= 1;
+            }
+        }
+    }
+}
+
+pub fn get_exporters_for_channel(channel_id: u32) -> Vec<u32> {
+    let mut exporters = Vec::new();
+    unsafe {
+        for i in 0..NODE_IDS.len() {
+            if NODE_TYPES[i] == 1 && NODE_ACTIVE[i] == 1 && NODE_CHANNELS[i] == channel_id && NODE_SLEEP_TICKS[i] == 0 {
+                exporters.push(NODE_IDS[i]);
+            }
+        }
+    }
+    exporters
+}
+
+pub fn get_node_priority(node_id: u32) -> i8 {
+    unsafe {
+        if let Some(index) = NODE_IDS.iter().position(|&id| id == node_id) {
+            NODE_PRIORITIES[index]
+        } else {
+            0
+        }
     }
 }
 
