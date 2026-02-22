@@ -22,6 +22,11 @@ pub extern "C" fn init_inventory() {
 }
 
 #[no_mangle]
+pub extern "C" fn init_node_manager() {
+    crate::node::init()
+}
+
+#[no_mangle]
 pub extern "C" fn init_logger() {
     crate::logger::init()
 }
@@ -70,6 +75,21 @@ pub extern "C" fn get_unique_item_count() -> u32 {
 #[no_mangle]
 pub extern "C" fn clear_location(location_id: u32) -> u32 {
     inventory::clear_location(location_id)
+}
+
+#[no_mangle]
+pub extern "C" fn register_node(x: i32, y: i32, z: i32, node_type: u8) -> u32 {
+    crate::node::register_node(x, y, z, node_type)
+}
+
+#[no_mangle]
+pub extern "C" fn unregister_node(node_id: u32) {
+    crate::node::unregister_node(node_id)
+}
+
+#[no_mangle]
+pub extern "C" fn set_node_active(node_id: u32, active: u8) {
+    crate::node::set_node_active(node_id, active)
 }
 
 #[no_mangle]
