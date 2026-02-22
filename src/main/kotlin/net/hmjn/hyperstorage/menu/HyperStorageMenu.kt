@@ -13,7 +13,7 @@ import net.neoforged.neoforge.items.SlotItemHandler
 class HyperStorageMenu(
     id: Int,
     playerInventory: Inventory,
-    private val blockEntity: HyperStorageBlockEntity,
+    val blockEntity: HyperStorageBlockEntity,
 ) : AbstractContainerMenu(ModMenuTypes.HYPER_STORAGE_MENU.get(), id) {
     // Constructor for client-side (from packet)
     constructor(
@@ -40,24 +40,24 @@ class HyperStorageMenu(
             }
         }
 
-        // Correct 3x3 grid logic matching Dispenser GUI texture
+        // 3x3 grid moved left, leaving tons of space on the right for names
         for (row in 0 until 3) {
             for (col in 0 until 3) {
                 val index = col + row * 3
-                addSlot(SlotItemHandler(blockEntity.inventory, index, 62 + col * 18, 17 + row * 18))
+                addSlot(SlotItemHandler(blockEntity.inventory, index, 8 + col * 18, 54 + row * 18))
             }
         }
 
-        // Add player inventory (standard Slots)
+        // Add player inventory (standard Slots for 222 height container)
         for (row in 0 until 3) {
             for (col in 0 until 9) {
-                addSlot(Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18))
+                addSlot(Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 140 + row * 18))
             }
         }
 
         // Add player hotbar
         for (col in 0 until 9) {
-            addSlot(Slot(playerInventory, col, 8 + col * 18, 142))
+            addSlot(Slot(playerInventory, col, 8 + col * 18, 198))
         }
     }
 

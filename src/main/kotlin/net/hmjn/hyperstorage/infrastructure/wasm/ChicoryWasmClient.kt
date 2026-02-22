@@ -82,7 +82,7 @@ class ChicoryWasmClient {
         mem.write(ptr, bytes)
 
         val result = callFunction("reconstruct_from_binary_dump", ptr.toLong(), size.toLong())
-        
+
         callFunction("dealloc", ptr.toLong(), size.toLong())
         return result == 1L
     }

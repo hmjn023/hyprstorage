@@ -1,13 +1,13 @@
 package net.hmjn.hyperstorage.core
 
 import net.hmjn.hyperstorage.Hyperstorage
+import net.hmjn.hyperstorage.infrastructure.InventoryManager
 import net.hmjn.hyperstorage.util.ItemHashUtil
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.event.level.LevelEvent
-import net.hmjn.hyperstorage.infrastructure.InventoryManager
 
 /**
  * Global entry point for ID translation.
@@ -80,11 +80,11 @@ object WasmIdManager {
         val level = event.level
         if (level is ServerLevel && level.dimension() == ServerLevel.OVERWORLD) {
             val savedData = level.dataStorage.computeIfAbsent(WasmIdSavedData.factory(), WasmIdSavedData.FILE_NAME)
-            
+
             savedData.itemMap = itemMapper.getItemMap()
             savedData.nbtMap = itemMapper.getNbtMap()
             savedData.wasmSnapshot = InventoryManager.getSnapshotBytes()
-            
+
             savedData.setDirty()
             Hyperstorage.LOGGER.debug("Saved WasmIdManager mappings and Wasm snapshot to SavedData")
         }
@@ -94,10 +94,12 @@ object WasmIdManager {
         val level = event.level
         if (level is ServerLevel && level.dimension() == ServerLevel.OVERWORLD) {
             val savedData = level.dataStorage.computeIfAbsent(WasmIdSavedData.factory(), WasmIdSavedData.FILE_NAME)
-            
+
             itemMapper.loadData(savedData.itemMap.toMutableMap(), savedData.nbtMap.toMutableMap())
-            Hyperstorage.LOGGER.info("WasmIdManager loaded ${savedData.itemMap.size} item IDs and ${savedData.nbtMap.size} NBT IDs from SavedData")
-            
+            Hyperstorage.LOGGER.info(
+                "WasmIdManager loaded ${savedData.itemMap.size} item IDs and ${savedData.nbtMap.size} NBT IDs from SavedData",
+            )
+
             if (savedData.wasmSnapshot.isNotEmpty()) {
                 val success = InventoryManager.restoreSnapshotBytes(savedData.wasmSnapshot)
                 if (success) {

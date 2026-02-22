@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+#![allow(static_mut_refs)]
 use crate::node;
 
 #[derive(Clone, Copy)]

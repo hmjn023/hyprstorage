@@ -41,6 +41,10 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     // Snapshot of the previous tick's inventory state for diffing
     private val previousInventory = MutableList(9) { ItemInfo.EMPTY }
 
+    // Node names for wireless transfer
+    var customName: String = ""
+    var targetName: String = ""
+
     // Location ID for this block
     private val locationId: Int by lazy {
         ItemHashUtil.getLocationId(blockPos.x, blockPos.y, blockPos.z)
@@ -52,6 +56,8 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     ) {
         super.saveAdditional(tag, registries)
         tag.put("Inventory", inventory.serializeNBT(registries))
+        tag.putString("CustomName", customName)
+        tag.putString("TargetName", targetName)
     }
 
     override fun loadAdditional(
@@ -60,9 +66,21 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     ) {
         super.loadAdditional(tag, registries)
         inventory.deserializeNBT(registries, tag.getCompound("Inventory"))
+        customName = tag.getString("CustomName")
+        targetName = tag.getString("TargetName")
 
         // Sync loaded inventory to Wasm
         syncFullInventoryToWasm()
+    }
+
+    override fun getUpdateTag(registries: HolderLookup.Provider): CompoundTag {
+        val tag = super.getUpdateTag(registries)
+        saveAdditional(tag, registries)
+        return tag
+    }
+
+    override fun getUpdatePacket(): net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket? {
+        return net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket.create(this)
     }
 
     /** Called when inventory changes */
@@ -109,6 +127,11 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
     /** Drop all items when block is broken */
     fun drops() {
         level?.let { level ->
+            if (level is net.minecraft.server.level.ServerLevel) {
+                net.hmjn.hyperstorage.network.NodeRegistrySavedData.get(level)
+                    .removeNodeByPos(net.minecraft.core.GlobalPos.of(level.dimension(), blockPos))
+            }
+
             // Clear Wasm inventory for this location
             val removed = InventoryManager.getInventoryRepository().clearLocation(locationId)
             Hyperstorage.LOGGER.debug(
@@ -136,6 +159,45 @@ class HyperStorageBlockEntity(pos: BlockPos, state: BlockState) :
             if (blockEntity.inventoryChanged) {
                 blockEntity.syncInventoryToWasm()
                 blockEntity.inventoryChanged = false
+            }
+
+            // Wireless transfer logic
+            if (level is net.minecraft.server.level.ServerLevel &&
+                blockEntity.targetName.isNotBlank() &&
+                blockEntity.targetName != blockEntity.customName
+            ) {
+                val registry = net.hmjn.hyperstorage.network.NodeRegistrySavedData.get(level)
+                val targetPos = registry.getNode(blockEntity.targetName)
+                if (targetPos != null) {
+                    val targetLevel = level.server.getLevel(targetPos.dimension())
+                    if (targetLevel != null && targetLevel.isLoaded(targetPos.pos())) {
+                        val targetBE = targetLevel.getBlockEntity(targetPos.pos())
+                        if (targetBE is HyperStorageBlockEntity) {
+                            var transferredAny = false
+                            for (i in 0 until blockEntity.inventory.slots) {
+                                val stackInSlot = blockEntity.inventory.getStackInSlot(i)
+                                if (!stackInSlot.isEmpty) {
+                                    // Try to insert into target
+                                    val remainder =
+                                        net.neoforged.neoforge.items.ItemHandlerHelper.insertItem(
+                                            targetBE.inventory,
+                                            stackInSlot.copy(),
+                                            false,
+                                        )
+                                    val insertedCount = stackInSlot.count - remainder.count
+                                    if (insertedCount > 0) {
+                                        blockEntity.inventory.extractItem(i, insertedCount, false)
+                                        transferredAny = true
+                                    }
+                                }
+                            }
+                            if (transferredAny) {
+                                blockEntity.setChanged()
+                                // targetBE's onContentsChanged will handle its setChanged()
+                            }
+                        }
+                    }
+                }
             }
         }
     }

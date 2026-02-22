@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.level.saveddata.SavedData
 
 class WasmIdSavedData : SavedData() {
-
     var itemMap: Map<String, Int> = emptyMap()
     var nbtMap: Map<Long, Int> = emptyMap()
     var wasmSnapshot: ByteArray = ByteArray(0)
@@ -13,7 +12,10 @@ class WasmIdSavedData : SavedData() {
     companion object {
         const val FILE_NAME = "hyperstorage_wasm_data"
 
-        fun load(tag: CompoundTag, provider: HolderLookup.Provider): WasmIdSavedData {
+        fun load(
+            tag: CompoundTag,
+            provider: HolderLookup.Provider,
+        ): WasmIdSavedData {
             val data = WasmIdSavedData()
 
             val itemMap = mutableMapOf<String, Int>()
@@ -43,7 +45,10 @@ class WasmIdSavedData : SavedData() {
         }
     }
 
-    override fun save(tag: CompoundTag, provider: HolderLookup.Provider): CompoundTag {
+    override fun save(
+        tag: CompoundTag,
+        provider: HolderLookup.Provider,
+    ): CompoundTag {
         val itemsTag = CompoundTag()
         itemMap.forEach { (name, id) -> itemsTag.putInt(name, id) }
         tag.put("Items", itemsTag)

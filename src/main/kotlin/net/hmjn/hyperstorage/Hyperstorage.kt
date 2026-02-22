@@ -40,6 +40,7 @@ object Hyperstorage {
         // Register lifecycle events manually (avoids AutoKotlinEventBusSubscriber / Bindings bug)
         MOD_BUS.addListener(::onCommonSetup)
         MOD_BUS.addListener(::registerCapabilities)
+        MOD_BUS.addListener(net.hmjn.hyperstorage.network.ModNetworking::register)
 
         // Register game-level events (FORGE bus) for WasmIdManager
         NeoForge.EVENT_BUS.addListener(WasmIdManager::onLevelSave)

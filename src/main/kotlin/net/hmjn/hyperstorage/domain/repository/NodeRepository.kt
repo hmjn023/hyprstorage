@@ -30,5 +30,8 @@ interface NodeRepository {
      * @param nodeId The unique ID of the node
      * @param active 1 for Active, 0 for Inactive
      */
-    fun setNodeActive(nodeId: Long, active: Byte)
+    fun setNodeActive(
+        nodeId: Long,
+        active: Byte,
+    )
 }

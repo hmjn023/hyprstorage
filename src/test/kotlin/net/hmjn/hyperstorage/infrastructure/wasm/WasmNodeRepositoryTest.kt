@@ -16,7 +16,6 @@ class WasmNodeRepositoryTest {
         client.addHostFunction(WasmBridge.createLogHostFunction())
         val wasmFile = File("src/main/rust/target/wasm32-unknown-unknown/release/hyper_visor_storage_wasm.wasm")
         client.load(wasmFile.inputStream())
-        
         repository = WasmNodeRepository(client)
         repository.initNodeManager() // Start with a clean state before each test
     }
