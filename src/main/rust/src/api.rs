@@ -1,3 +1,5 @@
+#![allow(static_mut_refs)]
+
 use crate::allocator;
 use crate::inventory;
 
@@ -75,6 +77,35 @@ pub extern "C" fn add(a: i32, b: i32) -> i32 {
     a + b
 }
 
+static mut SNAPSHOT_BUFFER: Vec<u8> = Vec::new();
+
+#[no_mangle]
+pub extern "C" fn get_inventory_snapshot_size() -> usize {
+    unsafe {
+        SNAPSHOT_BUFFER = crate::snapshot::create_snapshot();
+        SNAPSHOT_BUFFER.len()
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn copy_inventory_to_buffer(ptr: *mut u8) {
+    unsafe {
+        std::ptr::copy_nonoverlapping(SNAPSHOT_BUFFER.as_ptr(), ptr, SNAPSHOT_BUFFER.len());
+        SNAPSHOT_BUFFER.clear();
+        SNAPSHOT_BUFFER.shrink_to_fit();
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn reconstruct_from_binary_dump(ptr: *const u8, size: usize) -> u32 {
+    let slice = unsafe { std::slice::from_raw_parts(ptr, size) };
+    if crate::snapshot::restore_snapshot(slice) {
+        1
+    } else {
+        0
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -97,5 +128,28 @@ mod tests {
         // Actually, if I return 0, it might be equal to 0 if expected is 0.
         // But add_item should return new quantity.
         assert_eq!(qty, 10);
+    }
+
+    #[test]
+    fn test_api_snapshot() {
+        init_inventory();
+        add_item(42, 123, 50, 1);
+
+        let size = get_inventory_snapshot_size();
+        assert!(size > 0);
+
+        let mut buffer = vec![0u8; size];
+        copy_inventory_to_buffer(buffer.as_mut_ptr());
+
+        // Snapshot is now in buffer, inventory state can be cleared
+        init_inventory();
+        assert_eq!(get_item_count(42, 123), 0);
+
+        // Restore
+        let success = reconstruct_from_binary_dump(buffer.as_ptr(), size);
+        assert_eq!(success, 1);
+
+        // Verify
+        assert_eq!(get_item_count(42, 123), 50);
     }
 }

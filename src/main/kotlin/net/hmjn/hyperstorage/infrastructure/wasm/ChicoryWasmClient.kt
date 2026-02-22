@@ -52,4 +52,38 @@ class ChicoryWasmClient {
         val results = export.apply(*args)
         return if (results != null && results.isNotEmpty()) results[0] else 0L
     }
+
+    /**
+     * Extracts the full inventory snapshot from the active Wasm module.
+     */
+    fun getSnapshotBytes(): ByteArray {
+        val size = callFunction("get_inventory_snapshot_size").toInt()
+        if (size == 0) return ByteArray(0)
+
+        val ptr = callFunction("alloc", size.toLong()).toInt()
+        callFunction("copy_inventory_to_buffer", ptr.toLong())
+
+        val mem = instance?.memory() ?: throw IllegalStateException("Wasm memory missing")
+        val bytes = mem.readBytes(ptr, size)
+
+        callFunction("dealloc", ptr.toLong(), size.toLong())
+        return bytes
+    }
+
+    /**
+     * Restores the full inventory snapshot into the active Wasm module.
+     */
+    fun restoreSnapshotBytes(bytes: ByteArray): Boolean {
+        if (bytes.isEmpty()) return false
+        val size = bytes.size
+        val ptr = callFunction("alloc", size.toLong()).toInt()
+
+        val mem = instance?.memory() ?: throw IllegalStateException("Wasm memory missing")
+        mem.write(ptr, bytes)
+
+        val result = callFunction("reconstruct_from_binary_dump", ptr.toLong(), size.toLong())
+        
+        callFunction("dealloc", ptr.toLong(), size.toLong())
+        return result == 1L
+    }
 }

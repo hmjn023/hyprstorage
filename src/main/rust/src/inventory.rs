@@ -16,6 +16,31 @@ pub fn init() {
     }
 }
 
+pub fn get_snapshot() -> (Vec<u32>, Vec<u64>, Vec<u64>, Vec<u32>) {
+    unsafe {
+        (
+            ITEM_IDS.clone(),
+            NBT_HASHES.clone(),
+            QUANTITIES.clone(),
+            LOCATION_IDS.clone(),
+        )
+    }
+}
+
+pub fn restore_snapshot(
+    item_ids: Vec<u32>,
+    nbt_hashes: Vec<u64>,
+    quantities: Vec<u64>,
+    location_ids: Vec<u32>,
+) {
+    unsafe {
+        ITEM_IDS = item_ids;
+        NBT_HASHES = nbt_hashes;
+        QUANTITIES = quantities;
+        LOCATION_IDS = location_ids;
+    }
+}
+
 pub fn add(item_id: u32, nbt_hash: u64, quantity: u64, location_id: u32) -> u64 {
     unsafe {
         // Find existing item with same item_id, nbt_hash, and location_id

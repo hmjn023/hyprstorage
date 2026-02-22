@@ -39,4 +39,13 @@ object InventoryManager {
 
     // Low level access if needed (optional)
     fun getInventoryRepository(): InventoryRepository = repository
+
+    // Wasm State Snapshot
+    fun getSnapshotBytes(): ByteArray {
+        return wasmClient.getSnapshotBytes()
+    }
+
+    fun restoreSnapshotBytes(bytes: ByteArray): Boolean {
+        return wasmClient.restoreSnapshotBytes(bytes)
+    }
 }

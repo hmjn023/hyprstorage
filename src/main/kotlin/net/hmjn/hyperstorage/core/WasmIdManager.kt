@@ -3,16 +3,11 @@ package net.hmjn.hyperstorage.core
 import net.hmjn.hyperstorage.Hyperstorage
 import net.hmjn.hyperstorage.util.ItemHashUtil
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.NbtAccounter
-import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.storage.LevelResource
 import net.neoforged.neoforge.event.level.LevelEvent
-import java.io.IOException
-import java.nio.file.Path
+import net.hmjn.hyperstorage.infrastructure.InventoryManager
 
 /**
  * Global entry point for ID translation.
@@ -20,7 +15,6 @@ import java.nio.file.Path
  */
 object WasmIdManager {
     private val itemMapper = WasmIdMapper()
-    private val ID_MAP_FILE = "hyperstorage/id_map.dat"
 
     /**
      * Get a Wasm ID for the given item stack.
@@ -75,69 +69,6 @@ object WasmIdManager {
     }
 
     /**
-     * Save the ID mappings to a file.
-     */
-    fun save(filePath: Path) {
-        val tag = CompoundTag()
-
-        val itemsTag = CompoundTag()
-        itemMapper.getItemMap().forEach { (name, id) ->
-            itemsTag.putInt(name, id)
-        }
-        tag.put("Items", itemsTag)
-
-        val nbtsTag = CompoundTag()
-        itemMapper.getNbtMap().forEach { (hash, id) ->
-            nbtsTag.putInt(hash.toString(), id)
-        }
-        tag.put("Nbts", nbtsTag)
-
-        try {
-            val file = filePath.toFile()
-            if (file.parentFile != null) {
-                file.parentFile.mkdirs()
-            }
-            NbtIo.writeCompressed(tag, filePath)
-            Hyperstorage.LOGGER.debug("Saved WasmIdManager mappings to $filePath")
-        } catch (e: IOException) {
-            Hyperstorage.LOGGER.error("Failed to save WasmIdManager mappings", e)
-        }
-    }
-
-    /**
-     * Load the ID mappings from a file.
-     */
-    fun load(filePath: Path) {
-        val file = filePath.toFile()
-        if (!file.exists()) {
-            resetForTesting() // Ensure clean state if no file
-            return
-        }
-
-        try {
-            val tag = NbtIo.readCompressed(filePath, NbtAccounter.unlimitedHeap()) ?: return
-
-            val itemMap = mutableMapOf<String, Int>()
-            val itemsTag = tag.getCompound("Items")
-            for (key in itemsTag.allKeys) {
-                itemMap[key] = itemsTag.getInt(key)
-            }
-
-            val nbtMap = mutableMapOf<Long, Int>()
-            val nbtsTag = tag.getCompound("Nbts")
-            for (key in nbtsTag.allKeys) {
-                val hash = key.toLongOrNull() ?: continue
-                nbtMap[hash] = nbtsTag.getInt(key)
-            }
-
-            itemMapper.loadData(itemMap, nbtMap)
-            Hyperstorage.LOGGER.info("WasmIdManager loaded ${itemMap.size} item IDs and ${nbtMap.size} NBT IDs from $filePath")
-        } catch (e: Exception) {
-            Hyperstorage.LOGGER.error("Failed to load WasmIdManager mappings", e)
-        }
-    }
-
-    /**
      * Reset the internal state. Used for testing and world changes.
      */
     fun resetForTesting() {
@@ -148,16 +79,37 @@ object WasmIdManager {
     internal fun onLevelSave(event: LevelEvent.Save) {
         val level = event.level
         if (level is ServerLevel && level.dimension() == ServerLevel.OVERWORLD) {
-            val path = level.server.getWorldPath(LevelResource.ROOT).resolve(ID_MAP_FILE)
-            save(path)
+            val savedData = level.dataStorage.computeIfAbsent(WasmIdSavedData.factory(), WasmIdSavedData.FILE_NAME)
+            
+            savedData.itemMap = itemMapper.getItemMap()
+            savedData.nbtMap = itemMapper.getNbtMap()
+            savedData.wasmSnapshot = InventoryManager.getSnapshotBytes()
+            
+            savedData.setDirty()
+            Hyperstorage.LOGGER.debug("Saved WasmIdManager mappings and Wasm snapshot to SavedData")
         }
     }
 
     internal fun onLevelLoad(event: LevelEvent.Load) {
         val level = event.level
         if (level is ServerLevel && level.dimension() == ServerLevel.OVERWORLD) {
-            val path = level.server.getWorldPath(LevelResource.ROOT).resolve(ID_MAP_FILE)
-            load(path)
+            val savedData = level.dataStorage.computeIfAbsent(WasmIdSavedData.factory(), WasmIdSavedData.FILE_NAME)
+            
+            itemMapper.loadData(savedData.itemMap.toMutableMap(), savedData.nbtMap.toMutableMap())
+            Hyperstorage.LOGGER.info("WasmIdManager loaded ${savedData.itemMap.size} item IDs and ${savedData.nbtMap.size} NBT IDs from SavedData")
+            
+            if (savedData.wasmSnapshot.isNotEmpty()) {
+                val success = InventoryManager.restoreSnapshotBytes(savedData.wasmSnapshot)
+                if (success) {
+                    Hyperstorage.LOGGER.info("Wasm snapshot restored successfully (${savedData.wasmSnapshot.size} bytes).")
+                } else {
+                    // Provide fallback: we loaded IDs but Wasm failed. This is acceptable for simple cases where Wasm state will just gradually re-sync, but for hyperstorage it means lost inventory.
+                    Hyperstorage.LOGGER.error("Failed to restore Wasm snapshot! In-memory inventory might be lost.")
+                }
+            } else {
+                // Wasm loading happens in FMLCommonSetupEvent elsewhere, so just log it.
+                Hyperstorage.LOGGER.info("No Wasm snapshot found (new world/first run).")
+            }
         }
     }
 }
